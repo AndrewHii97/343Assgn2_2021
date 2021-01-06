@@ -45,7 +45,7 @@ Submit the **softcopy and object file (HTML and javascript)** of your program sh
 This assignment must be submitted on **Monday (25 January 2021 at 5.00-6.00 pm)**
 
 ## Group Member 
-1. Andrew Hii
-2. Neanceance 
-3. Lee Yuan Hooi 
-4. Tong Yong Hang 
+1. Andrew Hii - dev/a
+2. Neanceance - dev/n
+3. Lee Yuan Hooi - dev/lyh
+4. Tong Yong Hang - dev/tyh
