@@ -1,0 +1,124 @@
+body {
+  background-image: url('image_1.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.split {
+    top: 30px;
+    bottom: 50px;
+    height: 90%;
+    position: fixed;
+    z-index: 1;
+    overflow-x: hidden;
+  }
+  
+  .left {
+    border-radius: 5px;
+    border-spacing: 5px;
+    padding : 10px;
+    width: 850px;
+    left: 50px;
+    background-color:white;
+    display: inline-block;
+  }
+
+  .right {
+    border-radius: 5px;
+    border-spacing: 5px;
+    padding : 10px;
+    width: 500px;
+    right : 50px;
+    background-color: #80ced6;
+  }
+
+  .Shape {
+    margin-top: 15px;
+    margin-left: 10px;
+  }
+
+  .Texture,
+  .Lightning,
+  .Speed_Rotate {
+    padding : 2px;
+    margin: 5px;
+ } 
+
+ button {
+    margin: 0px 30px 0px 15px;
+    font-size: 20px;
+    font-family: Helvetica;
+    border: 5px solid white;
+    background-color: transparent;
+    color: white;
+    border-radius: 5px;
+  }
+
+  button:hover:enabled {
+    background-color:  white;
+    color:black;
+  }
+
+h1 {
+    margin: 0px 12px 0px 15px;
+    font-size: 30px;
+    font-weight: bold;
+    font-family: Tahoma;
+    color: white;
+  }
+
+.head_2 {
+  height: 30px;
+  margin-left: 16px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-size: 16px;
+  font-family: Tahoma;
+  color: black;
+}
+
+.space{
+  width: 50%;
+  display: inline-block;
+}
+
+#Shininess_1,
+#Position_1,
+#Ambient_1,
+#Diffuse_1,
+#Specular_1,
+#Speed_1{
+    border :none;
+    background-color : transparent;
+    font-size: 16px;
+    font-family: Tahoma;
+    color: white;
+}
+
+#Shininess_2,
+#Position_2,
+#Ambient_2,
+#Diffuse_2,
+#Specular_2,
+#Speed_2{
+    width: 40%;
+    display: inline-block;
+}
+
+#Ambient_Color,
+#Diffuse_Color,
+#Specular_Color{
+    border :none;
+    background-color : transparent;
+}
+
+.checkbox {
+    margin-left: 12px;
+    margin-top: 10px;
+    display: inline-block;
+    width: 30%;
+  }
+
+
+
