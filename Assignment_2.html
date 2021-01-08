@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+    <title>Texture and Lightning</title>
+
+    <script type="text/javascript" src="assignment_2.js"></script>
+
+    <!-- CSS file -->
+    <link rel="stylesheet" href="assignment_2.css" />
+  </head>
+
+  <body>
+    <div class="split left">
+    
+    </div>
+      
+    <div class="split right">
+        <div class="Shape">
+            <button id= "Sphere">Sphere</button> <button id= "Cube">Cube</button> <button id= "Cuboid">Cuboid</button>
+        </div>
+
+        <div class="Texture">
+            <h1>Texture</h1>
+            <br>
+                <button id= "Texture_1">Texture 1</button> 
+                <button id= "Texture_2">Texture 2</button> 
+                <button id= "Texture_3">Texture 3</button>
+            </br>
+            <br>
+                <button id= "Texture_4">Texture 4</button> 
+                <button id= "Texture_5">Texture 5</button> 
+                <button id= "Texture_6">Texture 6</button>
+            </br>
+        </div>
+
+        <div class="Lightning">
+            <h1>Lightning</h1>
+            <br>
+                <div class = "space">
+                    <span class = "head_2">Material Shininess </span>
+                    <input id="Shininess_1" type="text" value="10" maxlength="1" size="1" readonly/>
+                </div>
+                <input id="Shininess_2" type="range" min="1" max="100" value="10" step="1" oninput="Shininess_1.value=Shininess_2.value"/>
+            </br>
+            <br>
+                <div class = "space">
+                    <span class = "head_2">Light Position </span>
+                    <input id="Position_1" type="text" value="1.0" maxlength="1" size="1" readonly/>
+                </div>
+                <input id="Position_2" type="range" min="0.1" max="10" value="1.0" step="0.1" oninput="Position_1.value=Position_2.value"/>
+            </br>
+            <br>
+                <div class = "space">
+                    <span class = "head_2">Ambient Light </span>
+                    <input id="Ambient_1" type="text" value="0.1" maxlength="1" size="1" readonly/>
+                    <input id="Ambient_Color" type="color" value="#00ff00"  />
+                </div>
+                <input id="Ambient_2" type="range" min="0.1" max="1" value="0.1" step="0.1" oninput="Ambient_1.value=Ambient_2.value"/>
+            </br>
+            <br>
+                <div class = "space">
+                    <span class = "head_2">Diffuse Light </span>
+                    <input id="Diffuse_1" type="text" value="1.0" maxlength="1" size="1" readonly/>
+                    <input id="Diffuse_Color" type="color" value="#00ff00" />
+                </div>
+                <input id="Diffuse_2" type="range" min="0.1" max="10" value="1.0" step="0.1" oninput="Diffuse_1.value=Diffuse_2.value"/>
+            </br>
+            <br>
+                <div class = "space">
+                    <span class = "head_2">Specular Light </span>
+                    <input id="Specular_1" type="text" value="1.0" maxlength="1" size="1" readonly/>
+                    <input id="Specular_Color" type="color" value="#00ff00"  />
+                </div>
+                <input id="Specular_2" type="range" min="0.1" max="10" value="1.0" step="0.1" oninput="Specular_1.value=Specular_2.value"/>
+            </br>
+        </div>
+
+        <div class="Speed_Rotate">
+            <h1>Animation</h1>
+            <br>
+                <div class = "space">
+                    <span class = "head_2">Speed </span>
+                    <input id="Speed_1" type="text" value="1" maxlength="1" size="1" readonly/>
+                </div>
+                <input id="Speed_2" type="range" min="1" max="5" value="1" step="1" oninput="Speed_1.value=Speed_2.value"/>
+            </br>
+            <br>
+                <div class = "space">
+                    <span class = "head_2">Rotation </span>
+                </div>
+                <div class="check_div">
+                    <div class="checkbox">
+                        <input type="checkbox" id="x-axis" class="checkbox-input" />
+                        <span class="head_2">X-axis</span>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" id="y-axis" class="checkbox-input" />
+                        <span class="head_2">Y-axis</span>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" id="y-axis" class="checkbox-input" />
+                        <span class="head_2">Z-axis</span>
+                    </div>
+                </div>
+        </div>
+
+        <div class="Shape">
+            <button id= "Reset">Reset</button>
+        </div>
+
+    </div>
+
+    <div id="animate-canvas">
+        <canvas id="gl-canvas" width="1000" height="500"> Oops ... your browser doesn't support the HTML5 canvas element </canvas>
+    </div>
+  </body>
+  </html>
