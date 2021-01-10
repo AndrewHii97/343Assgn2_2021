@@ -4,6 +4,74 @@
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
     <title>Texture and Lightning</title>
 
+    <script id="vertex-shader" type="x-shader/x-vertex">
+        attribute  vec4 vPosition;
+        attribute  vec3 vNormal;
+        varying vec4 fColor;
+        
+        uniform vec4 ambientProduct, diffuseProduct, specularProduct;
+        uniform mat4 modelViewMatrix;
+        uniform mat4 projectionMatrix;
+        uniform vec4 lightPosition;
+        uniform float shininess;
+        void main()
+        {
+        
+            
+            vec3 pos = -(modelViewMatrix * vPosition).xyz;
+            vec3 light = lightPosition.xyz;
+            vec3 L = normalize( light - pos );
+        
+            
+            vec3 E = normalize( -pos );
+            vec3 H = normalize( L + E );
+            
+            vec4 NN = vec4(vNormal,0);
+        
+            // Transform vertex normal into eye coordinates
+               
+            vec3 N = normalize( (modelViewMatrix*NN).xyz);
+        
+            // Compute terms in the illumination equation
+            vec4 ambient = ambientProduct;
+        
+            float Kd = max( dot(L, N), 0.0 );
+            vec4  diffuse = Kd*diffuseProduct;
+        
+            float Ks = pow( max(dot(N, H), 0.0), shininess );
+            vec4  specular = Ks * specularProduct;
+            
+            if( dot(L, N) < 0.0 ) {
+            specular = vec4(0.0, 0.0, 0.0, 1.0);
+            } 
+        
+            gl_Position = projectionMatrix * modelViewMatrix * vPosition;
+            fColor = ambient + diffuse +specular;
+            
+            fColor.a = 1.0;
+        }
+        </script>
+        
+        <script id="fragment-shader" type="x-shader/x-fragment">
+        
+        #ifdef GL_ES
+        precision highp float;
+        #endif
+        
+        
+        varying vec4 fColor;
+        
+        void
+        main()
+        {
+            gl_FragColor = fColor;
+        }
+        </script>
+    
+    <!-- JavaScript file -->
+    <script type="text/javascript" src="../Common/webgl-utils.js"></script>
+    <script type="text/javascript" src="../Common/initShaders.js"></script>
+    <script type="text/javascript" src="../Common/MV.js"></script>
     <script type="text/javascript" src="assignment_2.js"></script>
 
     <!-- CSS file -->
@@ -12,12 +80,12 @@
 
   <body>
     <div class="split left">
-    
+        <canvas id="gl-canvas"> Oops ... your browser doesn't support the HTML5 canvas element </canvas>
     </div>
       
     <div class="split right">
         <div class="Shape">
-            <button id= "Sphere">Sphere</button> <button id= "Cube">Cube</button> <button id= "Cuboid">Cuboid</button>
+            <button id= "Sphere">Sphere</button> <button id= "Cube">Cube</button> <button id= "Pyramid">Pyramid</button>
         </div>
 
         <div class="Texture">
@@ -81,27 +149,21 @@
             <br>
                 <div class = "space">
                     <span class = "head_2">Speed </span>
-                    <input id="Speed_1" type="text" value="1" maxlength="1" size="1" readonly/>
+                    <input id="Speed_1" type="text" value="3" maxlength="1" size="1" readonly/>
                 </div>
-                <input id="Speed_2" type="range" min="1" max="5" value="1" step="1" oninput="Speed_1.value=Speed_2.value"/>
+                <input id="Speed_2" type="range" min="1" max="5" value="3" step="1" oninput="Speed_1.value=Speed_2.value"/>
             </br>
             <br>
                 <div class = "space">
                     <span class = "head_2">Rotation </span>
                 </div>
-                <div class="check_div">
-                    <div class="checkbox">
-                        <input type="checkbox" id="x-axis" class="checkbox-input" />
-                        <span class="head_2">X-axis</span>
-                    </div>
-                    <div class="checkbox">
-                        <input type="checkbox" id="y-axis" class="checkbox-input" />
-                        <span class="head_2">Y-axis</span>
-                    </div>
-                    <div class="checkbox">
-                        <input type="checkbox" id="y-axis" class="checkbox-input" />
-                        <span class="head_2">Z-axis</span>
-                    </div>
+                <div class="Rotate_div">
+                    <br>
+                        <button id= "x_axis">X-axis</button> 
+                        <button id= "y_axis">Y-axis</button> 
+                        <button id= "z_axis">Z-axis</button>
+                        <button id= "toggle">Toggle</button>
+                    </br>
                 </div>
         </div>
 
@@ -110,9 +172,6 @@
         </div>
 
     </div>
-
-    <div id="animate-canvas">
-        <canvas id="gl-canvas" width="1000" height="500"> Oops ... your browser doesn't support the HTML5 canvas element </canvas>
-    </div>
+    
   </body>
   </html>
