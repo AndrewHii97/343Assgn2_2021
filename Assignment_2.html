@@ -44,11 +44,13 @@
             if( dot(L, N) < 0.0 ) {
             specular = vec4(0.0, 0.0, 0.0, 1.0);
             } 
-        
-            gl_Position = projectionMatrix * modelViewMatrix * vPosition;
+
             fColor = ambient + diffuse +specular;
             
             fColor.a = 1.0;
+
+            gl_Position = projectionMatrix * modelViewMatrix * vPosition;
+
         }
         </script>
         
@@ -80,7 +82,7 @@
 
   <body>
     <div class="split left">
-        <canvas id="gl-canvas"> Oops ... your browser doesn't support the HTML5 canvas element </canvas>
+        <canvas id="gl-canvas" width="800" height="800"> Oops ... your browser doesn't support the HTML5 canvas element </canvas>
     </div>
       
     <div class="split right">
