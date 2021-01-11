@@ -113,8 +113,8 @@ h1 {
 }
 
   #gl-canvas {
+    width: 90%;
     height: 90%;
-    width: 100%;
 
   }
 
