@@ -269,10 +269,11 @@ var render = function(){
 
    //create cube 
    modelView = mat4();
+   modelView = mult(modelView, translate(-2.8,0,0));
    modelView = mult(modelView, rotate(theta[xAxis], [1, 0, 0] ));
    modelView = mult(modelView, rotate(theta[yAxis], [0, 1, 0] ));
    modelView = mult(modelView, rotate(theta[zAxis], [0, 0, 1] ));
-   modelView = mult(modelView, translate(-2.8,0,0));
+  
 
    gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelView));
 
@@ -292,10 +293,11 @@ var render = function(){
 
    //create pyramid
    modelViewMatrix_1 = mat4();
+   modelViewMatrix_1 = mult(modelViewMatrix_1, translate(2.8,0,0));
    modelViewMatrix_1 = mult(modelViewMatrix_1, rotate(theta[xAxis], [1, 0, 0]));
    modelViewMatrix_1 = mult(modelViewMatrix_1, rotate(theta[yAxis], [0, 1, 0]));
    modelViewMatrix_1 = mult(modelViewMatrix_1, rotate(theta[zAxis], [0, 0, 1]));
-   modelViewMatrix_1 = mult(modelViewMatrix_1, translate(2.8,0,0));
+   
    
    gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix_1) );
 
