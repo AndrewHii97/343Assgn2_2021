@@ -24,7 +24,7 @@ var lightSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
 var materialAmbient = vec4( 1.0, 0.0, 1.0, 1.0 );
 var materialDiffuse = vec4( 1.0, 0.8, 0.0, 1.0);
 var materialSpecular = vec4( 1.0, 0.8, 0.0, 1.0 );
-var materialShininess = 100.0;
+var materialShininess = 200.0;
 
 var ctm;
 var ambientColor, diffuseColor, specularColor;
@@ -77,97 +77,6 @@ var vertices = [
     vec4( 1.0, -0.50,  0.50),
     vec4(-1.0, -0.50,  0.50)
 ];
-function colorPyramid()
-{
-    quad1( 12, 13, 14 ); 
-    quad1( 12, 14, 15 ); 
-    quad1( 14, 12, 15 ); 
-    quad1( 15, 13, 12 );
-}
-
-function quad1(a, b, c) 
-{
-
-    var indices = [a, b, c];
-    for ( var i = 0; i < indices.length; ++i ) {
-        normalsArray.push( vertices[indices[i]] );
-        pointsArray.push( vertices[indices[i]] );
-    }
-}
-
-function triangle(a, b, c) {
-
-   normalsArray.push(a);
-   normalsArray.push(b);
-   normalsArray.push(c);
-   
-   pointsArray.push(a);
-   pointsArray.push(b);      
-   pointsArray.push(c);
-
-   index += 3;
-}
-
-function divideTriangle(a, b, c, count) {
-   if ( count > 0 ) {
-               
-       var ab = mix( a, b, 0.5);
-       var ac = mix( a, c, 0.5);
-       var bc = mix( b, c, 0.5);
-               
-       ab = normalize(ab, true);
-       ac = normalize(ac, true);
-       bc = normalize(bc, true);
-                               
-       divideTriangle( a, ab, ac, count - 1 );
-       divideTriangle( ab, b, bc, count - 1 );
-       divideTriangle( bc, c, ac, count - 1 );
-       divideTriangle( ab, bc, ac, count - 1 );
-   }
-   else { 
-       triangle( a, b, c );
-   }
-}
-
-function tetrahedron(a, b, c, d, n) {
-   divideTriangle(a, b, c, n);
-   divideTriangle(d, c, b, n);
-   divideTriangle(a, d, b, n);
-   divideTriangle(a, c, d, n);
-}
-
-function quad(a, b, c, d) {
-
-     var t1 = subtract(vertices[b], vertices[a]);
-     var t2 = subtract(vertices[c], vertices[b]);
-     var normal = cross(t1, t2);
-     var normal = vec3(normal);
-     normal = normalize(normal);
-
-     pointsArray.push(vertices[a]); 
-     normalsArray.push(normal); 
-     pointsArray.push(vertices[b]); 
-     normalsArray.push(normal); 
-     pointsArray.push(vertices[c]); 
-     normalsArray.push(normal);   
-     pointsArray.push(vertices[a]);  
-     normalsArray.push(normal); 
-     pointsArray.push(vertices[c]); 
-     normalsArray.push(normal); 
-     pointsArray.push(vertices[d]); 
-     normalsArray.push(normal);    
-}
-
-
-function colorCube()
-{
-    quad( 1, 0, 3, 2 );
-    quad( 2, 3, 7, 6 );
-    quad( 3, 0, 4, 7 );
-    quad( 6, 5, 1, 2 );
-    quad( 4, 5, 6, 7 );
-    quad( 5, 4, 0, 1 );
-}
 
 
 window.onload = function init() {
