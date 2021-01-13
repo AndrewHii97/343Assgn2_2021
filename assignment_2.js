@@ -128,30 +128,6 @@ window.onload = function init() {
     modelViewMatrixLoc = gl.getUniformLocation( program, "modelViewMatrix" );
     projectionMatrixLoc = gl.getUniformLocation( program, "projectionMatrix" );
 
-    //Function to change rotation
-    document.getElementById("x_axis").onclick = function(){axis = xAxis;};
-    document.getElementById("y_axis").onclick = function(){axis = yAxis;};
-    document.getElementById("z_axis").onclick = function(){axis = zAxis;};
-    document.getElementById("toggle").onclick = function(){flag = !flag;};
-    
-    //Function to get object speed
-    document.getElementById("Speed_2").onchange = function(){
-        speed = parseInt(document.getElementById("Speed_1").value);
-    };
-
-    //Function to reset settings
-    document.getElementById("Reset").onclick = function(){
-      theta =[45.0, 0.0, 0.0];
-      axis = xAxis;
-      speed = 3.0;
-      flag = true;
-      document.getElementById("Speed_1").value = speed;
-      document.getElementById("Speed_2").value = speed;
-      
-      
-
-    };
-
     gl.uniform4fv(gl.getUniformLocation(program, "ambientProduct"),
        flatten(ambientProduct));
     gl.uniform4fv(gl.getUniformLocation(program, "diffuseProduct"),
@@ -164,6 +140,8 @@ window.onload = function init() {
     gl.uniform1f(gl.getUniformLocation(program, 
        "shininess"),materialShininess);
     
+    config_ui();
+
     render();
 }
 
@@ -214,3 +192,30 @@ var render = function(){
 
    requestAnimFrame( render );       
 }
+
+function config_ui(){
+
+        // Set event handler for change axis of rotation 
+        document.getElementById("x_axis").onclick = function(){axis = xAxis;};
+        document.getElementById("y_axis").onclick = function(){axis = yAxis;};
+        document.getElementById("z_axis").onclick = function(){axis = zAxis;};
+        document.getElementById("toggle").onclick = function(){flag = !flag;};
+        
+        // Set event handler to change the speed of rotation 
+        document.getElementById("Speed_2").onchange = function(){
+            speed = parseInt(document.getElementById("Speed_1").value);
+        };
+    
+        // Set event handler to reset to default value 
+        document.getElementById("Reset").onclick = function(){
+          theta =[45.0, 0.0, 0.0];
+          axis = xAxis;
+          speed = 3.0;
+          flag = true;
+          document.getElementById("Speed_1").value = speed;
+          document.getElementById("Speed_2").value = speed;
+        };
+
+        // 
+}
+
