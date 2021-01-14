@@ -25,15 +25,45 @@ var modelViewMatrix; //sphere
 var modelViewMatrix_1; //pyramid
 
 
-var lightPosition = vec4(1.0, 1.0, 1.0, 0.0 );
-var lightAmbient = vec4(0.5, 0.5, 0.5, 1.0 );
-var lightDiffuse = vec4( 1.0, 1.0, 1.0, 1.0 );
-var lightSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
 
-var materialAmbient = vec4( 1.0, 0.0, 1.0, 1.0 );
-var materialDiffuse = vec4( 1.0, 0.8, 0.0, 1.0);
-var materialSpecular = vec4( 1.0, 0.8, 0.0, 1.0 );
-var materialShininess = 200.0;
+// return array of light source 
+// value comply to initial 
+function init_source_light(){
+   var rgb_map = hexToRgb(document.getElementById("Ambient_Color").value.toString());
+   var amb = vec4(0.0, 0.0, 0.0, 0.0);
+   amb[COLOR.RED] = normalColor(parseInt(rgb_map.r));
+   amb[COLOR.GREEN] = normalColor(parseInt(rgb_map.g));
+   amb[COLOR.BLUE] = normalColor(parseInt(rgb_map.b));
+
+
+   return {
+      lightPosition: vec4(1.0, 1.0, 1.0, 0.0),
+      lightAmbient: amb, 
+      lightDiffuse: vec4(1.0,1.0,1.0,1.0),
+      lightSpecular: vec4(1,0,1.0,1.0,1.0)
+   };
+}
+
+function init_material_coef(){
+   var amb_str  = parseFloat(document.getElementById("Ambient_Strength").value);
+   return {
+      materialAmbient : vec4(amb_str, amb_str, amb_str, 1.0),
+      materialDiffuse : vec4( 1.0, 0.8, 0.0, 1.0),
+      materialSpecular : vec4( 1.0, 0.8, 0.0, 1.0 ),
+      materialShininess : 200
+   };
+
+}
+
+// light property 
+var lightPosition = vec4();
+var lightAmbient = vec4();
+var lightDiffuse = vec4();
+var lightSpecular = vec4();
+var materialAmbient = vec4();
+var materialDiffuse = vec4();
+var materialSpecular = vec4();
+var materialShininess 
 
 var ctm;
 var ambientColor, diffuseColor, specularColor;
@@ -105,9 +135,22 @@ window.onload = function init() {
     program = initShaders( gl, "vertex-shader", "fragment-shader" );
     gl.useProgram( program );
     
-    ambientProduct = mult(lightAmbient, materialAmbient);
-    diffuseProduct = mult(lightDiffuse, materialDiffuse);
-    specularProduct = mult(lightSpecular, materialSpecular);
+    
+    //light property set to html value 
+   light_src_param = init_source_light();
+   lightAmbient = light_src_param.lightAmbient;
+   lightDiffuse = light_src_param.lightDiffuse;
+   lightSpecular = light_src_param.lightSpecular
+   lightPosition = light_src_param.lightPosition;
+   light_mat_param = init_material_coef();
+   materialAmbient = light_mat_param.materialAmbient;
+   materialDiffuse = light_mat_param.materialDiffuse;
+   materialSpecular = light_mat_param.materialSpecular;
+   materialShininess = light_mat_param.materialShininess;
+
+   ambientProduct = mult(lightAmbient, materialAmbient);
+   diffuseProduct = mult(lightDiffuse, materialDiffuse);
+   specularProduct = mult(lightSpecular, materialSpecular);
    
     //cube attribute
     colorCube();
@@ -117,6 +160,9 @@ window.onload = function init() {
 
     //sphere attribute
     tetrahedron(vertices[8], vertices[9], vertices[10], vertices[11], numTimesToSubdivide);
+
+
+    
 
     var nBuffer = gl.createBuffer();
     gl.bindBuffer( gl.ARRAY_BUFFER, nBuffer );
