@@ -293,6 +293,25 @@ function config_ui(){
       ambientProduct = mult(lightAmbient,materialAmbient);
    };
 
+   // an diffuse color change recalculate ambient produt 
+   var diffuse_color_obj = document.getElementById("Diffuse_Color");
+   diffuse_color_obj.oninput = function(){
+      var rgb_map  = hexToRgb(this.value.toString());
+      lightDiffuse[COLOR.RED] = normalColor(parseInt(rgb_map.r));
+      lightDiffuse[COLOR.BLUE] = normalColor(parseInt(rgb_map.b));
+      lightDiffuse[COLOR.GREEN] = normalColor(parseInt(rgb_map.g));
+      diffuseProduct = mult(lightDiffuse,materialDiffuse);
+   };
+
+   var diffuse_str_obj = document.getElementById("Diffuse_Strength");
+   diffuse_str_obj.oninput = function(){
+      document.getElementById("Diffuse_1").value = this.value;
+      materialDiffuse[COLOR.RED] = parseFloat(this.value);
+      materialDiffuse[COLOR.GREEN] = parseFloat(this.value);
+      materialDiffuse[COLOR.BLUE] = parseFloat(this.value); 
+      diffuseProduct = mult(lightDiffuse,materialDiffuse);
+   }
+   
 }
 
 function hexToRgb(hex) {
