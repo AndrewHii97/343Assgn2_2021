@@ -229,13 +229,22 @@ function config_ui(){
 
    // on ambient color change recalculate ambient product 
    var ambient_color_obj = document.getElementById("Ambient_Color");
-   ambient_color_obj.onchange = function (){
+   ambient_color_obj.oninput = function(){
       var rgb_map  = hexToRgb(this.value.toString());
       lightAmbient[COLOR.RED] = normalColor(parseInt(rgb_map.r)); 
       lightAmbient[COLOR.BLUE] = normalColor(parseInt(rgb_map.b));
       lightAmbient[COLOR.GREEN] = normalColor(parseInt(rgb_map.g));
       ambientProduct = mult(lightAmbient,materialAmbient);
-      console.log(ambientProduct);
+   };
+
+   // an ambient strength change recalculate ambient product 
+   var ambient_str_obj = document.getElementById("Ambient_Strength");
+   ambient_str_obj.oninput = function(){
+      document.getElementById("Ambient_1").value = this.value; 
+      materialAmbient[COLOR.RED] = parseFloat(this.value);
+      materialAmbient[COLOR.GREEN] = parseFloat(this.value);
+      materialAmbient[COLOR.BLUE] = parseFloat(this.value); 
+      ambientProduct = mult(lightAmbient,materialAmbient);
    };
 
 }
