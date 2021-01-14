@@ -3,15 +3,15 @@ var gl;
 
 
 // Color enum 
-const COLOR = { 
-   RED:0,
-   GREEN:1,
-   BLUE:2,
-   ALPHA:3
+const COLOR = {
+   RED: 0,
+   GREEN: 1,
+   BLUE: 2,
+   ALPHA: 3
 };
 
-var NumVertices  = 36; //cube
-var NumVertices_1  = 12; //pyramid
+var NumVertices = 36; //cube
+var NumVertices_1 = 12; //pyramid
 
 var pointsArray = [];
 var normalsArray = [];
@@ -28,7 +28,7 @@ var modelViewMatrix_1; //pyramid
 
 // return array of light source 
 // value comply to initial 
-function init_source_light(){
+function init_source_light() {
    var rgb_map;
    var amb = vec4(0.0, 0.0, 0.0, 1.0);
    var diff = vec4(0.0, 0.0, 0.0, 1.0);
@@ -51,21 +51,21 @@ function init_source_light(){
 
    return {
       lightPosition: vec4(2.0, 2.0, 0.0, 1.0),
-      lightAmbient: amb, 
+      lightAmbient: amb,
       lightDiffuse: diff,
       lightSpecular: spec
    };
 }
 
-function init_material_coef(){
-   var amb_str  = parseFloat(document.getElementById("Ambient_Strength").value);
+function init_material_coef() {
+   var amb_str = parseFloat(document.getElementById("Ambient_Strength").value);
    var diff_str = parseFloat(document.getElementById("Diffuse_Strength").value);
    var spec_str = parseFloat(document.getElementById("Specular_Strength").value);
    return {
-      materialAmbient : vec4(amb_str, amb_str, amb_str, 1.0),
-      materialDiffuse : vec4(diff_str, diff_str, diff_str, 1.0),
-      materialSpecular : vec4(spec_str, spec_str, spec_str, 1.0 ),
-      materialShininess : 200
+      materialAmbient: vec4(amb_str, amb_str, amb_str, 1.0),
+      materialDiffuse: vec4(diff_str, diff_str, diff_str, 1.0),
+      materialSpecular: vec4(spec_str, spec_str, spec_str, 1.0),
+      materialShininess: 200
    };
 
 }
@@ -78,7 +78,7 @@ var lightSpecular = vec4();
 var materialAmbient = vec4();
 var materialDiffuse = vec4();
 var materialSpecular = vec4();
-var materialShininess 
+var materialShininess
 
 var ctm;
 var ambientColor, diffuseColor, specularColor;
@@ -90,9 +90,9 @@ var xAxis = 0;
 var yAxis = 1;
 var zAxis = 2;
 var axis = 0;
-var theta =[45.0, 0.0, 0.0]; // to set the initial rotation of object
+var theta = [45.0, 0.0, 0.0]; // to set the initial rotation of object
 
-var speed =3.0; // rotation speed
+var speed = 3.0; // rotation speed
 var flag = true;
 
 //sphere attribute
@@ -110,48 +110,50 @@ var far = 30;
 
 
 var vertices = [
-   vec4( -0.5, -0.5,  0.5, 1.0 ),
-   vec4( -0.5,  0.5,  0.5, 1.0 ),
-   vec4( 0.5,  0.5,  0.5, 1.0 ),
-   vec4( 0.5, -0.5,  0.5, 1.0 ),
-   vec4( -0.5, -0.5, -0.5, 1.0 ),
-   vec4( -0.5,  0.5, -0.5, 1.0 ),
-   vec4( 0.5,  0.5, -0.5, 1.0 ),
-   vec4( 0.5, -0.5, -0.5, 1.0 ),
+   vec4(-0.5, -0.5, 0.5, 1.0),
+   vec4(-0.5, 0.5, 0.5, 1.0),
+   vec4(0.5, 0.5, 0.5, 1.0),
+   vec4(0.5, -0.5, 0.5, 1.0),
+   vec4(-0.5, -0.5, -0.5, 1.0),
+   vec4(-0.5, 0.5, -0.5, 1.0),
+   vec4(0.5, 0.5, -0.5, 1.0),
+   vec4(0.5, -0.5, -0.5, 1.0),
 
    //sphere
-    vec4(0.0, 0.0, -1.0,1),
-    vec4(0.0, 0.942809, 0.333333, 1),
-    vec4(-0.816497, -0.471405, 0.333333, 1),
-    vec4(0.816497, -0.471405, 0.333333,1),
-    
-    //pyramind
-    vec4( 0.0, -0.50, -1.00),
-    vec4( 0.0,  0.50,  0.00),
-    vec4( 1.0, -0.50,  0.50),
-    vec4(-1.0, -0.50,  0.50)
+   vec4(0.0, 0.0, -1.0, 1),
+   vec4(0.0, 0.942809, 0.333333, 1),
+   vec4(-0.816497, -0.471405, 0.333333, 1),
+   vec4(0.816497, -0.471405, 0.333333, 1),
+
+   //pyramind
+   vec4(0.0, -0.50, -1.00),
+   vec4(0.0, 0.50, 0.00),
+   vec4(1.0, -0.50, 0.50),
+   vec4(-1.0, -0.50, 0.50)
 ];
 
 
 window.onload = function init() {
-    canvas = document.getElementById( "gl-canvas" );
-    
-    gl = WebGLUtils.setupWebGL( canvas );
-    if ( !gl ) { alert( "WebGL isn't available" ); }
+   canvas = document.getElementById("gl-canvas");
 
-    gl.viewport( 0, 0, canvas.width, canvas.height );
-    gl.clearColor( 0.0, 0.0, 0.0, 1.0 );
-    
-    gl.enable(gl.DEPTH_TEST);
+   gl = WebGLUtils.setupWebGL(canvas);
+   if (!gl) {
+      alert("WebGL isn't available");
+   }
 
-    //
-    //  Load shaders and initialize attribute buffers
-    //
-    program = initShaders( gl, "vertex-shader", "fragment-shader" );
-    gl.useProgram( program );
-    
-    
-    //light property set to html value 
+   gl.viewport(0, 0, canvas.width, canvas.height);
+   gl.clearColor(0.0, 0.0, 0.0, 1.0);
+
+   gl.enable(gl.DEPTH_TEST);
+
+   //
+   //  Load shaders and initialize attribute buffers
+   //
+   program = initShaders(gl, "vertex-shader", "fragment-shader");
+   gl.useProgram(program);
+
+
+   //light property set to html value 
    light_src_param = init_source_light();
    lightAmbient = light_src_param.lightAmbient;
    lightDiffuse = light_src_param.lightDiffuse;
@@ -166,121 +168,129 @@ window.onload = function init() {
    ambientProduct = mult(lightAmbient, materialAmbient);
    diffuseProduct = mult(lightDiffuse, materialDiffuse);
    specularProduct = mult(lightSpecular, materialSpecular);
-   
-    //cube attribute
-    colorCube();
 
-    // pyramid attribute
-    colorPyramid();
+   //cube attribute
+   colorCube();
 
-    //sphere attribute
-    tetrahedron(vertices[8], vertices[9], vertices[10], vertices[11], numTimesToSubdivide);
+   // pyramid attribute
+   colorPyramid();
 
-
-    
-
-    var nBuffer = gl.createBuffer();
-    gl.bindBuffer( gl.ARRAY_BUFFER, nBuffer );
-    gl.bufferData( gl.ARRAY_BUFFER, flatten(normalsArray), gl.STATIC_DRAW );
-    
-    var vNormal = gl.getAttribLocation( program, "vNormal" );
-    gl.vertexAttribPointer( vNormal, 3, gl.FLOAT, false, 0, 0 );
-    gl.enableVertexAttribArray( vNormal );
-
-    var vBuffer = gl.createBuffer();
-    gl.bindBuffer( gl.ARRAY_BUFFER, vBuffer );
-    gl.bufferData( gl.ARRAY_BUFFER, flatten(pointsArray), gl.STATIC_DRAW );
-    
-    var vPosition = gl.getAttribLocation(program, "vPosition");
-    gl.vertexAttribPointer(vPosition, 4, gl.FLOAT, false, 0, 0);
-    gl.enableVertexAttribArray(vPosition);
-    
-    modelViewMatrixLoc = gl.getUniformLocation( program, "modelViewMatrix" );
-    projectionMatrixLoc = gl.getUniformLocation( program, "projectionMatrix" );
+   //sphere attribute
+   tetrahedron(vertices[8], vertices[9], vertices[10], vertices[11], numTimesToSubdivide);
 
 
-    config_ui();
 
-    render();
+
+   var nBuffer = gl.createBuffer();
+   gl.bindBuffer(gl.ARRAY_BUFFER, nBuffer);
+   gl.bufferData(gl.ARRAY_BUFFER, flatten(normalsArray), gl.STATIC_DRAW);
+
+   var vNormal = gl.getAttribLocation(program, "vNormal");
+   gl.vertexAttribPointer(vNormal, 3, gl.FLOAT, false, 0, 0);
+   gl.enableVertexAttribArray(vNormal);
+
+   var vBuffer = gl.createBuffer();
+   gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
+   gl.bufferData(gl.ARRAY_BUFFER, flatten(pointsArray), gl.STATIC_DRAW);
+
+   var vPosition = gl.getAttribLocation(program, "vPosition");
+   gl.vertexAttribPointer(vPosition, 4, gl.FLOAT, false, 0, 0);
+   gl.enableVertexAttribArray(vPosition);
+
+   modelViewMatrixLoc = gl.getUniformLocation(program, "modelViewMatrix");
+   projectionMatrixLoc = gl.getUniformLocation(program, "projectionMatrix");
+
+
+   config_ui();
+
+   render();
 }
 
-var render = function(){
-            
-   gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-           
-   if(flag) theta[axis] += speed; //speed of the object
+var render = function () {
+
+   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+   if (flag) theta[axis] += speed; //speed of the object
 
    projectionMatrix = ortho(left, right, bottom, ytop, near, far);
-   gl.uniformMatrix4fv( projectionMatrixLoc, false, flatten(projectionMatrix) );
+   gl.uniformMatrix4fv(projectionMatrixLoc, false, flatten(projectionMatrix));
 
    //create cube 
    modelView = mat4();
-   modelView = mult(modelView, translate(-2.8,0,0));
-   modelView = mult(modelView, rotate(theta[xAxis], [1, 0, 0] ));
-   modelView = mult(modelView, rotate(theta[yAxis], [0, 1, 0] ));
-   modelView = mult(modelView, rotate(theta[zAxis], [0, 0, 1] ));
-  
+   modelView = mult(modelView, translate(-2.8, 0, 0));
+   modelView = mult(modelView, rotate(theta[xAxis], [1, 0, 0]));
+   modelView = mult(modelView, rotate(theta[yAxis], [0, 1, 0]));
+   modelView = mult(modelView, rotate(theta[zAxis], [0, 0, 1]));
+
 
    gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelView));
 
-   gl.drawArrays( gl.TRIANGLES, 0, NumVertices );
-  
+   gl.drawArrays(gl.TRIANGLES, 0, NumVertices);
+
    //create sphere
    modelViewMatrix = mat4();
    modelViewMatrix = mult(modelViewMatrix, rotate(theta[xAxis], [1, 0, 0]));
    modelViewMatrix = mult(modelViewMatrix, rotate(theta[yAxis], [0, 1, 0]));
    modelViewMatrix = mult(modelViewMatrix, rotate(theta[zAxis], [0, 0, 1]));
 
-   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix) );
+   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
 
-   for( var i=NumVertices+NumVertices_1; i<index+NumVertices+NumVertices_1; i+=3) 
-       gl.drawArrays( gl.TRIANGLES, i, 3 );
+   for (var i = NumVertices + NumVertices_1; i < index + NumVertices + NumVertices_1; i += 3)
+      gl.drawArrays(gl.TRIANGLES, i, 3);
 
 
    //create pyramid
    modelViewMatrix_1 = mat4();
-   modelViewMatrix_1 = mult(modelViewMatrix_1, translate(2.8,0,0));
+   modelViewMatrix_1 = mult(modelViewMatrix_1, translate(2.8, 0, 0));
    modelViewMatrix_1 = mult(modelViewMatrix_1, rotate(theta[xAxis], [1, 0, 0]));
    modelViewMatrix_1 = mult(modelViewMatrix_1, rotate(theta[yAxis], [0, 1, 0]));
    modelViewMatrix_1 = mult(modelViewMatrix_1, rotate(theta[zAxis], [0, 0, 1]));
-   
-   
-   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix_1) );
 
-   gl.drawArrays( gl.TRIANGLES, NumVertices, NumVertices_1);
+
+   gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix_1));
+
+   gl.drawArrays(gl.TRIANGLES, NumVertices, NumVertices_1);
 
    // pass in the lighting product each time render is called 
    gl.uniform4fv(gl.getUniformLocation(program, "ambientProduct"),
-   flatten(ambientProduct));
+      flatten(ambientProduct));
    gl.uniform4fv(gl.getUniformLocation(program, "diffuseProduct"),
-   flatten(diffuseProduct) );
-   gl.uniform4fv(gl.getUniformLocation(program, "specularProduct"), 
-   flatten(specularProduct) );	
-   gl.uniform4fv(gl.getUniformLocation(program, "lightPosition"), 
-   flatten(lightPosition) );
-   
-gl.uniform1f(gl.getUniformLocation(program, 
-   "shininess"),materialShininess);
+      flatten(diffuseProduct));
+   gl.uniform4fv(gl.getUniformLocation(program, "specularProduct"),
+      flatten(specularProduct));
+   gl.uniform4fv(gl.getUniformLocation(program, "lightPosition"),
+      flatten(lightPosition));
 
-   requestAnimFrame( render );       
+   gl.uniform1f(gl.getUniformLocation(program,
+      "shininess"), materialShininess);
+
+   requestAnimFrame(render);
 }
 
-function config_ui(){
+function config_ui() {
 
-      // Set event handler for change axis of rotation 
-   document.getElementById("y_axis").onclick = function(){axis = yAxis;};
-   document.getElementById("z_axis").onclick = function(){axis = zAxis;};
-   document.getElementById("x_axis").onclick = function(){axis = xAxis;};
-   document.getElementById("toggle").onclick = function(){flag = !flag;};
-     
+   // Set event handler for change axis of rotation 
+   document.getElementById("y_axis").onclick = function () {
+      axis = yAxis;
+   };
+   document.getElementById("z_axis").onclick = function () {
+      axis = zAxis;
+   };
+   document.getElementById("x_axis").onclick = function () {
+      axis = xAxis;
+   };
+   document.getElementById("toggle").onclick = function () {
+      flag = !flag;
+   };
+
    // Set event handler to change the speed of rotation 
-   document.getElementById("Speed_2").onchange = function(){
+   document.getElementById("Speed_2").onchange = function () {
       speed = parseInt(document.getElementById("Speed_1").value);
    };
-   
+
    // Set event handler to reset to default value 
-   document.getElementById("Reset").onclick = function(){
-      theta =[45.0, 0.0, 0.0];
+   document.getElementById("Reset").onclick = function () {
+      theta = [45.0, 0.0, 0.0];
       axis = xAxis;
       speed = 3.0;
       flag = true;
@@ -290,75 +300,74 @@ function config_ui(){
 
    // on ambient color change recalculate ambient product 
    var ambient_color_obj = document.getElementById("Ambient_Color");
-   ambient_color_obj.oninput = function(){
-      var rgb_map  = hexToRgb(this.value.toString());
-      lightAmbient[COLOR.RED] = normalColor(parseInt(rgb_map.r)); 
+   ambient_color_obj.oninput = function () {
+      var rgb_map = hexToRgb(this.value.toString());
+      lightAmbient[COLOR.RED] = normalColor(parseInt(rgb_map.r));
       lightAmbient[COLOR.BLUE] = normalColor(parseInt(rgb_map.b));
       lightAmbient[COLOR.GREEN] = normalColor(parseInt(rgb_map.g));
-      ambientProduct = mult(lightAmbient,materialAmbient);
+      ambientProduct = mult(lightAmbient, materialAmbient);
    };
 
    // an ambient strength change recalculate ambient product 
    var ambient_str_obj = document.getElementById("Ambient_Strength");
-   ambient_str_obj.oninput = function(){
-      document.getElementById("Ambient_1").value = this.value; 
+   ambient_str_obj.oninput = function () {
+      document.getElementById("Ambient_1").value = this.value;
       materialAmbient[COLOR.RED] = parseFloat(this.value);
       materialAmbient[COLOR.GREEN] = parseFloat(this.value);
-      materialAmbient[COLOR.BLUE] = parseFloat(this.value); 
-      ambientProduct = mult(lightAmbient,materialAmbient);
+      materialAmbient[COLOR.BLUE] = parseFloat(this.value);
+      ambientProduct = mult(lightAmbient, materialAmbient);
    };
 
    // an diffuse color change recalculate diffuse product 
    var diffuse_color_obj = document.getElementById("Diffuse_Color");
-   diffuse_color_obj.oninput = function(){
-      var rgb_map  = hexToRgb(this.value.toString());
+   diffuse_color_obj.oninput = function () {
+      var rgb_map = hexToRgb(this.value.toString());
       lightDiffuse[COLOR.RED] = normalColor(parseInt(rgb_map.r));
       lightDiffuse[COLOR.BLUE] = normalColor(parseInt(rgb_map.b));
       lightDiffuse[COLOR.GREEN] = normalColor(parseInt(rgb_map.g));
-      diffuseProduct = mult(lightDiffuse,materialDiffuse);
+      diffuseProduct = mult(lightDiffuse, materialDiffuse);
    };
 
    // an diffuse strength change recalculate diffuse product 
    var diffuse_str_obj = document.getElementById("Diffuse_Strength");
-   diffuse_str_obj.oninput = function(){
+   diffuse_str_obj.oninput = function () {
       document.getElementById("Diffuse_1").value = this.value;
       materialDiffuse[COLOR.RED] = parseFloat(this.value);
       materialDiffuse[COLOR.GREEN] = parseFloat(this.value);
-      materialDiffuse[COLOR.BLUE] = parseFloat(this.value); 
-      diffuseProduct = mult(lightDiffuse,materialDiffuse);
+      materialDiffuse[COLOR.BLUE] = parseFloat(this.value);
+      diffuseProduct = mult(lightDiffuse, materialDiffuse);
    };
-   
+
    var specular_color_obj = document.getElementById("Specular_Color");
-   specular_color_obj.oninput = function(){
-      var rgb_map  = hexToRgb(this.value.toString());
+   specular_color_obj.oninput = function () {
+      var rgb_map = hexToRgb(this.value.toString());
       lightSpecular[COLOR.RED] = normalColor(parseInt(rgb_map.r));
       lightSpecular[COLOR.BLUE] = normalColor(parseInt(rgb_map.b));
       lightSpecular[COLOR.GREEN] = normalColor(parseInt(rgb_map.g));
-      specularProduct = mult(lightSpecular,materialSpecular);
+      specularProduct = mult(lightSpecular, materialSpecular);
    };
 
    var specular_str_obj = document.getElementById("Specular_Strength");
-   specular_str_obj.oninput = function(){
+   specular_str_obj.oninput = function () {
       document.getElementById("Specular_1").value = this.value;
       materialSpecular[COLOR.RED] = parseFloat(this.value);
       materialSpecular[COLOR.GREEN] = parseFloat(this.value);
-      materialSpecular[COLOR.BLUE] = parseFloat(this.value); 
-      specularProduct = mult(lightSpecular,materialSpecular);
+      materialSpecular[COLOR.BLUE] = parseFloat(this.value);
+      specularProduct = mult(lightSpecular, materialSpecular);
    }
 
-   
+
 }
 
 function hexToRgb(hex) {
    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
    return result ? {
-     r: parseInt(result[1], 16),
-     g: parseInt(result[2], 16),
-     b: parseInt(result[3], 16)
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16)
    } : null;
- }
+}
 
- function normalColor(byte_value){
-   return Math.round(((byte_value/ 255 * 1.0)+Number.EPSILON)* 100 )/100; 
- };
-
+function normalColor(byte_value) {
+   return Math.round(((byte_value / 255 * 1.0) + Number.EPSILON) * 100) / 100;
+};
