@@ -29,18 +29,31 @@ var modelViewMatrix_1; //pyramid
 // return array of light source 
 // value comply to initial 
 function init_source_light(){
-   var rgb_map = hexToRgb(document.getElementById("Ambient_Color").value.toString());
-   var amb = vec4(0.0, 0.0, 0.0, 0.0);
+   var rgb_map;
+   var amb = vec4(0.0, 0.0, 0.0, 1.0);
+   var diff = vec4(0.0, 0.0, 0.0, 1.0);
+   var spec = vec4(0.0, 0.0, 0.0, 1.0);
+
+   rgb_map = hexToRgb(document.getElementById("Ambient_Color").value.toString());
    amb[COLOR.RED] = normalColor(parseInt(rgb_map.r));
    amb[COLOR.GREEN] = normalColor(parseInt(rgb_map.g));
    amb[COLOR.BLUE] = normalColor(parseInt(rgb_map.b));
 
+   rgb_map = hexToRgb(document.getElementById("Diffuse_Color").value.toString());
+   diff[COLOR.RED] = normalColor(parseInt(rgb_map.r));
+   diff[COLOR.GREEN] = normalColor(parseInt(rgb_map.g));
+   diff[COLOR.BLUE] = normalColor(parseInt(rgb_map.b));
+
+   rgb_map = hexToRgb(document.getElementById("Specular_Color").value.toString());
+   spec[COLOR.RED] = normalColor(parseInt(rgb_map.r));
+   spec[COLOR.GREEN] = normalColor(parseInt(rgb_map.g));
+   spec[COLOR.BLUE] = normalColor(parseInt(rgb_map.b));
 
    return {
       lightPosition: vec4(1.0, 1.0, 1.0, 0.0),
       lightAmbient: amb, 
-      lightDiffuse: vec4(1.0,1.0,1.0,1.0),
-      lightSpecular: vec4(1,0,1.0,1.0,1.0)
+      lightDiffuse: diff,
+      lightSpecular: spec
    };
 }
 
@@ -293,7 +306,7 @@ function config_ui(){
       ambientProduct = mult(lightAmbient,materialAmbient);
    };
 
-   // an diffuse color change recalculate ambient produt 
+   // an diffuse color change recalculate diffuse product 
    var diffuse_color_obj = document.getElementById("Diffuse_Color");
    diffuse_color_obj.oninput = function(){
       var rgb_map  = hexToRgb(this.value.toString());
@@ -303,6 +316,7 @@ function config_ui(){
       diffuseProduct = mult(lightDiffuse,materialDiffuse);
    };
 
+   // an diffuse strength change recalculate diffuse product 
    var diffuse_str_obj = document.getElementById("Diffuse_Strength");
    diffuse_str_obj.oninput = function(){
       document.getElementById("Diffuse_1").value = this.value;
