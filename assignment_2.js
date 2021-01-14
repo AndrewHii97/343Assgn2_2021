@@ -1,6 +1,15 @@
 var canvas;
 var gl;
 
+
+// Color enum 
+const COLOR = { 
+   RED:0,
+   GREEN:1,
+   BLUE:2,
+   ALPHA:3
+};
+
 var NumVertices  = 36; //cube
 var NumVertices_1  = 12; //pyramid
 
@@ -17,7 +26,7 @@ var modelViewMatrix_1; //pyramid
 
 
 var lightPosition = vec4(1.0, 1.0, 1.0, 0.0 );
-var lightAmbient = vec4(0.2, 0.2, 0.2, 1.0 );
+var lightAmbient = vec4(0.5, 0.5, 0.5, 1.0 );
 var lightDiffuse = vec4( 1.0, 1.0, 1.0, 1.0 );
 var lightSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
 
@@ -100,7 +109,7 @@ window.onload = function init() {
     diffuseProduct = mult(lightDiffuse, materialDiffuse);
     specularProduct = mult(lightSpecular, materialSpecular);
    
-    //cube attrivute
+    //cube attribute
     colorCube();
 
     // pyramid attribute
@@ -128,18 +137,7 @@ window.onload = function init() {
     modelViewMatrixLoc = gl.getUniformLocation( program, "modelViewMatrix" );
     projectionMatrixLoc = gl.getUniformLocation( program, "projectionMatrix" );
 
-    gl.uniform4fv(gl.getUniformLocation(program, "ambientProduct"),
-       flatten(ambientProduct));
-    gl.uniform4fv(gl.getUniformLocation(program, "diffuseProduct"),
-       flatten(diffuseProduct) );
-    gl.uniform4fv(gl.getUniformLocation(program, "specularProduct"), 
-       flatten(specularProduct) );	
-    gl.uniform4fv(gl.getUniformLocation(program, "lightPosition"), 
-       flatten(lightPosition) );
-       
-    gl.uniform1f(gl.getUniformLocation(program, 
-       "shininess"),materialShininess);
-    
+
     config_ui();
 
     render();
@@ -190,32 +188,68 @@ var render = function(){
 
    gl.drawArrays( gl.TRIANGLES, NumVertices, NumVertices_1);
 
+   // pass in the lighting product each time render is called 
+   gl.uniform4fv(gl.getUniformLocation(program, "ambientProduct"),
+   flatten(ambientProduct));
+   gl.uniform4fv(gl.getUniformLocation(program, "diffuseProduct"),
+   flatten(diffuseProduct) );
+   gl.uniform4fv(gl.getUniformLocation(program, "specularProduct"), 
+   flatten(specularProduct) );	
+   gl.uniform4fv(gl.getUniformLocation(program, "lightPosition"), 
+   flatten(lightPosition) );
+   
+gl.uniform1f(gl.getUniformLocation(program, 
+   "shininess"),materialShininess);
+
    requestAnimFrame( render );       
 }
 
 function config_ui(){
 
-        // Set event handler for change axis of rotation 
-        document.getElementById("x_axis").onclick = function(){axis = xAxis;};
-        document.getElementById("y_axis").onclick = function(){axis = yAxis;};
-        document.getElementById("z_axis").onclick = function(){axis = zAxis;};
-        document.getElementById("toggle").onclick = function(){flag = !flag;};
-        
-        // Set event handler to change the speed of rotation 
-        document.getElementById("Speed_2").onchange = function(){
-            speed = parseInt(document.getElementById("Speed_1").value);
-        };
-    
-        // Set event handler to reset to default value 
-        document.getElementById("Reset").onclick = function(){
-          theta =[45.0, 0.0, 0.0];
-          axis = xAxis;
-          speed = 3.0;
-          flag = true;
-          document.getElementById("Speed_1").value = speed;
-          document.getElementById("Speed_2").value = speed;
-        };
+      // Set event handler for change axis of rotation 
+   document.getElementById("y_axis").onclick = function(){axis = yAxis;};
+   document.getElementById("z_axis").onclick = function(){axis = zAxis;};
+   document.getElementById("x_axis").onclick = function(){axis = xAxis;};
+   document.getElementById("toggle").onclick = function(){flag = !flag;};
+     
+   // Set event handler to change the speed of rotation 
+   document.getElementById("Speed_2").onchange = function(){
+      speed = parseInt(document.getElementById("Speed_1").value);
+   };
+   
+   // Set event handler to reset to default value 
+   document.getElementById("Reset").onclick = function(){
+      theta =[45.0, 0.0, 0.0];
+      axis = xAxis;
+      speed = 3.0;
+      flag = true;
+      document.getElementById("Speed_1").value = speed;
+      document.getElementById("Speed_2").value = speed;
+   };
 
-        // 
+   // on ambient color change recalculate ambient product 
+   var ambient_color_obj = document.getElementById("Ambient_Color");
+   ambient_color_obj.onchange = function (){
+      var rgb_map  = hexToRgb(this.value.toString());
+      lightAmbient[COLOR.RED] = normalColor(parseInt(rgb_map.r)); 
+      lightAmbient[COLOR.BLUE] = normalColor(parseInt(rgb_map.b));
+      lightAmbient[COLOR.GREEN] = normalColor(parseInt(rgb_map.g));
+      ambientProduct = mult(lightAmbient,materialAmbient);
+      console.log(ambientProduct);
+   };
+
 }
+
+function hexToRgb(hex) {
+   var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+   return result ? {
+     r: parseInt(result[1], 16),
+     g: parseInt(result[2], 16),
+     b: parseInt(result[3], 16)
+   } : null;
+ }
+
+ function normalColor(byte_value){
+   return Math.round(((byte_value/ 255 * 1.0)+Number.EPSILON)* 100 )/100; 
+ };
 
