@@ -17,10 +17,12 @@ function quad1(a, b, c)
 }
 
 function triangle(a, b, c) {
-
-   normalsArray.push(a);
-   normalsArray.push(b);
-   normalsArray.push(c);
+    var cb = subtract(b,c);
+    var ca = subtract(a,c);
+    var normal = cross(cb,ca);
+    normalsArray.push(normal);
+    normalsArray.push(normal);
+    normalsArray.push(normal);
    
    pointsArray.push(a);
    pointsArray.push(b);      
