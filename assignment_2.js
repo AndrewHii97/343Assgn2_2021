@@ -50,7 +50,7 @@ function init_source_light(){
    spec[COLOR.BLUE] = normalColor(parseInt(rgb_map.b));
 
    return {
-      lightPosition: vec4(1.0, 1.0, 1.0, 0.0),
+      lightPosition: vec4(2.0, 2.0, 0.0, 1.0),
       lightAmbient: amb, 
       lightDiffuse: diff,
       lightSpecular: spec
@@ -59,10 +59,12 @@ function init_source_light(){
 
 function init_material_coef(){
    var amb_str  = parseFloat(document.getElementById("Ambient_Strength").value);
+   var diff_str = parseFloat(document.getElementById("Diffuse_Strength").value);
+   var spec_str = parseFloat(document.getElementById("Specular_Strength").value);
    return {
       materialAmbient : vec4(amb_str, amb_str, amb_str, 1.0),
-      materialDiffuse : vec4( 1.0, 0.8, 0.0, 1.0),
-      materialSpecular : vec4( 1.0, 0.8, 0.0, 1.0 ),
+      materialDiffuse : vec4(diff_str, diff_str, diff_str, 1.0),
+      materialSpecular : vec4(spec_str, spec_str, spec_str, 1.0 ),
       materialShininess : 200
    };
 
@@ -138,7 +140,7 @@ window.onload = function init() {
     if ( !gl ) { alert( "WebGL isn't available" ); }
 
     gl.viewport( 0, 0, canvas.width, canvas.height );
-    gl.clearColor( 1.0, 1.0, 1.0, 1.0 );
+    gl.clearColor( 0.0, 0.0, 0.0, 1.0 );
     
     gl.enable(gl.DEPTH_TEST);
 
@@ -324,7 +326,26 @@ function config_ui(){
       materialDiffuse[COLOR.GREEN] = parseFloat(this.value);
       materialDiffuse[COLOR.BLUE] = parseFloat(this.value); 
       diffuseProduct = mult(lightDiffuse,materialDiffuse);
+   };
+   
+   var specular_color_obj = document.getElementById("Specular_Color");
+   specular_color_obj.oninput = function(){
+      var rgb_map  = hexToRgb(this.value.toString());
+      lightSpecular[COLOR.RED] = normalColor(parseInt(rgb_map.r));
+      lightSpecular[COLOR.BLUE] = normalColor(parseInt(rgb_map.b));
+      lightSpecular[COLOR.GREEN] = normalColor(parseInt(rgb_map.g));
+      specularProduct = mult(lightSpecular,materialSpecular);
+   };
+
+   var specular_str_obj = document.getElementById("Specular_Strength");
+   specular_str_obj.oninput = function(){
+      document.getElementById("Specular_1").value = this.value;
+      materialSpecular[COLOR.RED] = parseFloat(this.value);
+      materialSpecular[COLOR.GREEN] = parseFloat(this.value);
+      materialSpecular[COLOR.BLUE] = parseFloat(this.value); 
+      specularProduct = mult(lightSpecular,materialSpecular);
    }
+
    
 }
 
