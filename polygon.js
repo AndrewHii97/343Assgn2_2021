@@ -7,13 +7,19 @@ function colorPyramid()
 }
 
 function quad1(a, b, c) 
-{
-
+{   
     var indices = [a, b, c];
-    for ( var i = 0; i < indices.length; ++i ) {
-        normalsArray.push( vertices[indices[i]] );
-        pointsArray.push( vertices[indices[i]] );
-    }
+    var ab = subtract(vertices[indices[1]],vertices[indices[2]]);
+    var ac = subtract(vertices[indices[2]],vertices[indices[0]]);
+    var normal = cross(ab,ac);
+    normal = normalize(normal);
+    normalsArray.push(normal);
+    normalsArray.push(normal);
+    normalsArray.push(normal);  
+    pointsArray.push(vertices[indices[0]]);
+    pointsArray.push(vertices[indices[1]]);
+    pointsArray.push(vertices[indices[2]]);
+    
 }
 
 function triangle(a, b, c) {
