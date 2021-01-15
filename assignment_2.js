@@ -132,7 +132,7 @@ var render = function () {
    gl.uniform4fv(gl.getUniformLocation(program, "lightPosition"),
       flatten(lightPosition));
 
-   gl.uniform1f(gl.getUniformLocation(program,"shininess"), materialShininess);
+   gl.uniform1f(gl.getUniformLocation(program, "shininess"), materialShininess);
 
    requestAnimFrame(render);
 }

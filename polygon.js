@@ -96,4 +96,3 @@ function colorCube() {
     quad(4, 5, 6, 7);
     quad(5, 4, 0, 1);
 }
-
