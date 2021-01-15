@@ -19,7 +19,8 @@
         void main()
         {
         
-            
+            // -------------------------- lighting ----------------------------
+
             vec3 pos = -(modelViewMatrix * vPosition).xyz; 
             vec3 light = lightPosition.xyz;
             L = normalize( light - pos );
@@ -60,9 +61,14 @@
             // if( dot(L, N) < 0.0 ) {
             // specular = vec4(0.0, 0.0, 0.0, 1.0);
             // } 
-            gl_Position = projectionMatrix * modelViewMatrix * vPosition;
+
             //fColor = ambient + diffuse +specular;
             // fColor.a = 1.0;
+
+            // -------------------------- end ------------------------------
+
+            gl_Position = projectionMatrix * modelViewMatrix * vPosition;
+            
 
            
 
@@ -87,6 +93,7 @@
         void
         main()
         {
+            // -------------------------- lighting ----------------------------
             vec4 fColor; 
             vec3 H = normalize(L + E);
             
@@ -103,6 +110,8 @@
             }
             fColor = ambient + diffuse + specular;
             fColor.a = 1.0;
+
+            // -------------------------- end ---------------------------------
             gl_FragColor = fColor;
         }
         </script>
