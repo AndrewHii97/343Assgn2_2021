@@ -105,17 +105,3 @@ function config_ui() {
  
  }
 
-// convert hex value to rgb value 
-function hexToRgb(hex) {
-    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? {
-       r: parseInt(result[1], 16),
-       g: parseInt(result[2], 16),
-       b: parseInt(result[3], 16)
-    } : null;
- }
- 
- // convert the 0-255 rgb to 0.0-1.0 float number 
- function normalColor(byte_value) {
-    return Math.round(((byte_value / 255 * 1.0) + Number.EPSILON) * 100) / 100;
- };
