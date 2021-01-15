@@ -28,6 +28,36 @@ function config_ui() {
        flag = true;
        document.getElementById("Speed_1").value = speed;
        document.getElementById("Speed_2").value = speed;
+       document.getElementById("Ambient_Color").value = "#ffffff";
+       document.getElementById("Ambient_Strength").value = 0.1;
+       document.getElementById("Ambient_1").value = 0.1;
+       document.getElementById("Diffuse_Color").value = "#00ff00";
+       document.getElementById("Diffuse_Strength").value = 0.4;
+       document.getElementById("Diffuse_1").value = 0.4;
+       document.getElementById("Specular_Color").value = "#ffffff";
+       document.getElementById("Specular_Strength").value = 1.0;
+       document.getElementById("Specular_1").value = 1.0;
+       document.getElementById("Shininess_value").value = 10.0;
+       document.getElementById("Shininess_1").value = 10.0;
+       document.getElementById("Light_Loc").value = 0.0; 
+       document.getElementById("Position_1").value = 0.0;
+
+       var light_src_param = init_source_light();
+       lightAmbient = light_src_param.lightAmbient;
+       lightDiffuse = light_src_param.lightDiffuse;
+       lightSpecular = light_src_param.lightSpecular
+       lightPosition = light_src_param.lightPosition;
+    
+      var light_mat_param = init_material_coef();
+       materialAmbient = light_mat_param.materialAmbient;
+       materialDiffuse = light_mat_param.materialDiffuse;
+       materialSpecular = light_mat_param.materialSpecular;
+       materialShininess = light_mat_param.materialShininess;
+
+       ambientProduct = mult(lightAmbient, materialAmbient);
+       diffuseProduct = mult(lightDiffuse, materialDiffuse);
+       specularProduct = mult(lightSpecular, materialSpecular);
+          
     };
  
     // on ambient color change recalculate ambient product 
