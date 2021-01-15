@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
     <title>Texture and Lightning</title>
-
+    <!-- vertex shader -->
     <script id="vertex-shader" type="x-shader/x-vertex">
         attribute  vec4 vPosition;
         attribute  vec3 vNormal;
         varying vec4 fColor;
-        
+        varying vec3 N, L, E;
+        varying float distance;
         uniform vec4 ambientProduct, diffuseProduct, specularProduct;
         uniform mat4 modelViewMatrix;
         uniform mat4 projectionMatrix;
@@ -17,47 +19,72 @@
         void main()
         {
         
-            
-            vec3 pos = -(modelViewMatrix * vPosition).xyz;
+            // -------------------------- lighting ----------------------------
+
+            vec3 pos = -(modelViewMatrix * vPosition).xyz; 
             vec3 light = lightPosition.xyz;
-            vec3 L = normalize( light - pos );
-        
+            L = normalize( light - pos );
+            // L = light - pos;
+            // L = normalize(light);
+
+            //distance attenuation 
+            distance = pow(length(L),-2.0); 
+            float a = 1.0;
+            float b = 1.0;
+            float c = 1.0;
+            float d = length(L);
+            distance =  pow((a + b*d + c * pow(d,2.0)),-1.0);
+            // set to 1.0 to cancel attenuation 
+            distance = 1.0;
+
+            //L = normalize(light) ;
+            E = normalize( -pos );
+            // E = -pos;
             
-            vec3 E = normalize( -pos );
-            vec3 H = normalize( L + E );
+            // H = normalize( L + E );
             
             vec4 NN = vec4(vNormal,0);
         
             // Transform vertex normal into eye coordinates
                
-            vec3 N = normalize( (modelViewMatrix*NN).xyz);
+            N = normalize( (modelViewMatrix*NN).xyz);
         
             // Compute terms in the illumination equation
-            vec4 ambient = ambientProduct;
+            // vec4 ambient = ambientProduct;
         
-            float Kd = max( dot(L, N), 0.0 );
-            vec4  diffuse = Kd*diffuseProduct;
+            // float Kd = max( dot(L, N), 0.0 );
+            // vec4  diffuse = Kd*diffuseProduct;
         
-            float Ks = pow( max(dot(N, H), 0.0), shininess );
-            vec4  specular = Ks * specularProduct;
+            // float Ks = pow( max(dot(N, H), 0.0), shininess );
+            // vec4  specular = Ks * specularProduct;
             
-            if( dot(L, N) < 0.0 ) {
-            specular = vec4(0.0, 0.0, 0.0, 1.0);
-            } 
+            // if( dot(L, N) < 0.0 ) {
+            // specular = vec4(0.0, 0.0, 0.0, 1.0);
+            // } 
 
-            fColor = ambient + diffuse +specular;
-            
-            fColor.a = 1.0;
+            //fColor = ambient + diffuse +specular;
+            // fColor.a = 1.0;
+
+            // -------------------------- end ------------------------------
 
             gl_Position = projectionMatrix * modelViewMatrix * vPosition;
+            
+
+           
 
         }
         </script>
-        
-        <script id="fragment-shader" type="x-shader/x-fragment">
-        
+    <!-- fragment shader -->
+    <script id="fragment-shader" type="x-shader/x-fragment">
+
         #ifdef GL_ES
         precision highp float;
+        uniform vec4 ambientProduct;
+        uniform vec4 diffuseProduct;
+        uniform vec4 specularProduct;
+        uniform float shininess; 
+        varying vec3 N,L,E;
+        varying float distance;
         #endif
         
         
@@ -66,114 +93,135 @@
         void
         main()
         {
+            // -------------------------- lighting ----------------------------
+            vec4 fColor; 
+            vec3 H = normalize(L + E);
+            
+            vec4 ambient = ambientProduct; 
+            
+            float Kd = max(dot(L, N), 0.0 );
+            vec4 diffuse = distance * Kd * diffuseProduct;
+
+            float Ks = pow(max(dot(N, H),0.0), shininess);
+            vec4 specular = distance * Ks * specularProduct;
+            
+            if (dot(L, N)<0.0){
+                specular = vec4(0.0,0.0,0.0,1.0);
+            }
+            fColor = ambient + diffuse + specular;
+            fColor.a = 1.0;
+
+            // -------------------------- end ---------------------------------
             gl_FragColor = fColor;
         }
         </script>
-    
+
     <!-- JavaScript file -->
-    <script type="text/javascript" src="../Common/webgl-utils.js"></script>
-    <script type="text/javascript" src="../Common/initShaders.js"></script>
-    <script type="text/javascript" src="../Common/MV.js"></script>
+    <script type="text/javascript" src="./Common/webgl-utils.js"></script>
+    <script type="text/javascript" src="./Common/initShaders.js"></script>
+    <script type="text/javascript" src="./Common/MV.js"></script>
+    <script type="text/javascript" src="glob_var.js"></script>
+    <script type="text/javascript" src="polygon.js"></script>
+    <script type="text/javascript" src="evt_handler.js"></script>
     <script type="text/javascript" src="assignment_2.js"></script>
 
     <!-- CSS file -->
     <link rel="stylesheet" href="assignment_2.css" />
-  </head>
+</head>
 
-  <body>
+<body>
     <div class="split left">
-        <canvas id="gl-canvas" width="800" height="800"> Oops ... your browser doesn't support the HTML5 canvas element </canvas>
+        <canvas id="gl-canvas" width="800" height="800"> Oops ... your browser doesn't support the HTML5 canvas element
+        </canvas>
     </div>
-      
-    <div class="split right">
-        <div class="Shape">
-            <button id= "Sphere">Sphere</button> <button id= "Cube">Cube</button> <button id= "Pyramid">Pyramid</button>
-        </div>
 
+    <div class="split right">
         <div class="Texture">
             <h1>Texture</h1>
             <br>
-                <button id= "Texture_1">Texture 1</button> 
-                <button id= "Texture_2">Texture 2</button> 
-                <button id= "Texture_3">Texture 3</button>
+            <button id="Texture_1">Texture 1</button>
+            <button id="Texture_2">Texture 2</button>
+            <button id="Texture_3">Texture 3</button>
             </br>
             <br>
-                <button id= "Texture_4">Texture 4</button> 
-                <button id= "Texture_5">Texture 5</button> 
-                <button id= "Texture_6">Texture 6</button>
+            <button id="Texture_4">Texture 4</button>
+            <button id="Texture_5">Texture 5</button>
+            <button id="Texture_6">Texture 6</button>
             </br>
         </div>
 
         <div class="Lightning">
             <h1>Lightning</h1>
             <br>
-                <div class = "space">
-                    <span class = "head_2">Material Shininess </span>
-                    <input id="Shininess_1" type="text" value="10" maxlength="1" size="1" readonly/>
-                </div>
-                <input id="Shininess_2" type="range" min="1" max="100" value="10" step="1" oninput="Shininess_1.value=Shininess_2.value"/>
+            <div class="space">
+                <span class="head_2">Material Shininess </span>
+                <input id="Shininess_1" type="text" value="10" maxlength="1" size="1" readonly />
+            </div>
+            <input id="Shininess_value" type="range" min="1" max="500" value="10" step="1"
+                oninput="Shininess_1.value=Shininess_value.value" />
             </br>
             <br>
-                <div class = "space">
-                    <span class = "head_2">Light Position </span>
-                    <input id="Position_1" type="text" value="1.0" maxlength="1" size="1" readonly/>
-                </div>
-                <input id="Position_2" type="range" min="0.1" max="10" value="1.0" step="0.1" oninput="Position_1.value=Position_2.value"/>
+            <div class="space">
+                <span class="head_2">Light Position </span>
+                <input id="Position_1" type="text" value="1.0" maxlength="1" size="1" readonly />
+            </div>
+            <input id="Light_Loc" type="range" min="-10.0" max="10" value="0.0" step="0.1" />
             </br>
             <br>
-                <div class = "space">
-                    <span class = "head_2">Ambient Light </span>
-                    <input id="Ambient_1" type="text" value="0.1" maxlength="1" size="1" readonly/>
-                    <input id="Ambient_Color" type="color" value="#00ff00"  />
-                </div>
-                <input id="Ambient_2" type="range" min="0.1" max="1" value="0.1" step="0.1" oninput="Ambient_1.value=Ambient_2.value"/>
+            <div class="space">
+                <span class="head_2">Ambient Light </span>
+                <input id="Ambient_1" type="text" value="0.1" maxlength="1" size="1" readonly />
+                <input id="Ambient_Color" type="color" value="#ffffff" />
+            </div>
+            <input id="Ambient_Strength" type="range" min="0.0" max="1.0" value="0.1" step="0.1" />
             </br>
             <br>
-                <div class = "space">
-                    <span class = "head_2">Diffuse Light </span>
-                    <input id="Diffuse_1" type="text" value="1.0" maxlength="1" size="1" readonly/>
-                    <input id="Diffuse_Color" type="color" value="#00ff00" />
-                </div>
-                <input id="Diffuse_2" type="range" min="0.1" max="10" value="1.0" step="0.1" oninput="Diffuse_1.value=Diffuse_2.value"/>
+            <div class="space">
+                <span class="head_2">Diffuse Light </span>
+                <input id="Diffuse_1" type="text" value="0.4" maxlength="1" size="1" readonly />
+                <input id="Diffuse_Color" type="color" value="#00ff00" />
+            </div>
+            <input id="Diffuse_Strength" type="range" min="0.0" max="1.0" value="0.4" step="0.1" />
             </br>
             <br>
-                <div class = "space">
-                    <span class = "head_2">Specular Light </span>
-                    <input id="Specular_1" type="text" value="1.0" maxlength="1" size="1" readonly/>
-                    <input id="Specular_Color" type="color" value="#00ff00"  />
-                </div>
-                <input id="Specular_2" type="range" min="0.1" max="10" value="1.0" step="0.1" oninput="Specular_1.value=Specular_2.value"/>
+            <div class="space">
+                <span class="head_2">Specular Light </span>
+                <input id="Specular_1" type="text" value="1.0" maxlength="1" size="1" readonly />
+                <input id="Specular_Color" type="color" value="#ffffff" />
+            </div>
+            <input id="Specular_Strength" type="range" min="0.0" max="1.0" value="1.0" step="0.1" />
             </br>
         </div>
 
         <div class="Speed_Rotate">
             <h1>Animation</h1>
             <br>
-                <div class = "space">
-                    <span class = "head_2">Speed </span>
-                    <input id="Speed_1" type="text" value="3" maxlength="1" size="1" readonly/>
-                </div>
-                <input id="Speed_2" type="range" min="1" max="5" value="3" step="1" oninput="Speed_1.value=Speed_2.value"/>
+            <div class="space">
+                <span class="head_2">Speed </span>
+                <input id="Speed_1" type="text" value="3" maxlength="1" size="1" readonly />
+            </div>
+            <input id="Speed_2" type="range" min="1" max="5" value="3" step="1" oninput="Speed_1.value=Speed_2.value" />
             </br>
             <br>
-                <div class = "space">
-                    <span class = "head_2">Rotation </span>
-                </div>
-                <div class="Rotate_div">
-                    <br>
-                        <button id= "x_axis">X-axis</button> 
-                        <button id= "y_axis">Y-axis</button> 
-                        <button id= "z_axis">Z-axis</button>
-                        <button id= "toggle">Toggle</button>
-                    </br>
-                </div>
+            <div class="space">
+                <span class="head_2">Rotation </span>
+            </div>
+            <div class="Rotate_div">
+                <br>
+                <button id="x_axis">X-axis</button>
+                <button id="y_axis">Y-axis</button>
+                <button id="z_axis">Z-axis</button>
+                <button id="toggle">Toggle</button>
+                </br>
+            </div>
         </div>
 
         <div class="Shape">
-            <button id= "Reset">Reset</button>
+            <button id="Reset">Reset</button>
         </div>
 
     </div>
-    
-  </body>
-  </html>
+
+</body>
+
+</html>
