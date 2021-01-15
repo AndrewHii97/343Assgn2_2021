@@ -10,7 +10,6 @@ function quad1(a, b, c) {
     var ab = subtract(vertices[indices[1]], vertices[indices[2]]);
     var ac = subtract(vertices[indices[2]], vertices[indices[0]]);
     var normal = cross(ab, ac);
-    normal = normalize(normal);
     normalsArray.push(normal);
     normalsArray.push(normal);
     normalsArray.push(normal);
@@ -24,10 +23,14 @@ function triangle(a, b, c) {
     var cb = subtract(b, c);
     var ca = subtract(a, c);
     var normal = cross(cb, ca);
+    normal = normalize(normal);
     normalsArray.push(normal);
     normalsArray.push(normal);
     normalsArray.push(normal);
 
+    // normalsArray.push(a);
+    // normalsArray.push(a);
+    // normalsArray.push(a);
     pointsArray.push(a);
     pointsArray.push(b);
     pointsArray.push(c);
@@ -93,3 +96,4 @@ function colorCube() {
     quad(4, 5, 6, 7);
     quad(5, 4, 0, 1);
 }
+
