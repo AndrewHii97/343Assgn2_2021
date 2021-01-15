@@ -9,7 +9,7 @@ function quad1(a, b, c) {
     var indices = [a, b, c];
     var ab = subtract(vertices[indices[1]], vertices[indices[2]]);
     var ac = subtract(vertices[indices[2]], vertices[indices[0]]);
-    var normal = cross(ab, ac);
+    var normal = vec3(cross(ab, ac));
     normalsArray.push(normal);
     normalsArray.push(normal);
     normalsArray.push(normal);
@@ -67,8 +67,8 @@ function tetrahedron(a, b, c, d, n) {
 
 function quad(a, b, c, d) {
 
-    var t1 = subtract(vertices[b], vertices[a]);
-    var t2 = subtract(vertices[c], vertices[b]);
+    var t1 = subtract(vertices[a], vertices[d]);
+    var t2 = subtract(vertices[c], vertices[d]);
     var normal = cross(t1, t2);
     var normal = vec3(normal);
     normal = normalize(normal);

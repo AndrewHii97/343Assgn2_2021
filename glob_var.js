@@ -1,8 +1,10 @@
 // global_var.js 
 // global variable, enumeration, initialization function & utility function 
+// always the first script to load 
 
 var canvas;
 var gl;
+var program;
 
 // Color enum 
 const COLOR = {
@@ -36,10 +38,7 @@ var modelViewMatrix_1; //pyramid
  var materialSpecular = vec4();
  var materialShininess
  var ambientColor, diffuseColor, specularColor;
- 
- var viewerPos;
- var program;
- 
+
  // transformation property 
  var xAxis = 0;
  var yAxis = 1;
@@ -50,7 +49,7 @@ var modelViewMatrix_1; //pyramid
  var flag = true;
  
  //sphere attribute
- var numTimesToSubdivide = 5;
+ var numTimesToSubdivide = 6;
  var index = 0;
  
  
@@ -61,7 +60,10 @@ var modelViewMatrix_1; //pyramid
  var bottom = -3.0;
  var near = -20;
  var far = 30;
+
+ var viewerPos;
  
+
  
  var vertices = [
     vec4(-0.5, -0.5, 0.5, 1.0),

@@ -1,3 +1,6 @@
+// this is the main program 
+// always the last program to load 
+
 
 
 window.onload = function init() {
@@ -69,7 +72,6 @@ window.onload = function init() {
    modelViewMatrixLoc = gl.getUniformLocation(program, "modelViewMatrix");
    projectionMatrixLoc = gl.getUniformLocation(program, "projectionMatrix");
 
-
    config_ui();
 
    render();
@@ -135,3 +137,11 @@ var render = function () {
    requestAnimFrame(render);
 }
 
+/**
+ * Dependencies List 
+ * - glob_var.js 
+ * - evt_handler.js
+ * - polygon.js 
+ * - assigment_2.js
+ * - Assignment_2.html 
+ */
