@@ -10,7 +10,6 @@
         attribute  vec3 vNormal;
         varying vec4 fColor;
         varying vec3 N, L, E;
-        varying float distance;
         uniform vec4 ambientProduct, diffuseProduct, specularProduct;
         uniform mat4 modelViewMatrix;
         uniform mat4 projectionMatrix;
@@ -24,54 +23,15 @@
             vec3 pos = -(modelViewMatrix * vPosition).xyz; 
             vec3 light = lightPosition.xyz;
             L = normalize( light - pos );
-            // L = light - pos;
-            // L = normalize(light);
-
-            //distance attenuation 
-            distance = pow(length(L),-2.0); 
-            float a = 1.0;
-            float b = 1.0;
-            float c = 1.0;
-            float d = length(L);
-            distance =  pow((a + b*d + c * pow(d,2.0)),-1.0);
-            // set to 1.0 to cancel attenuation 
-            distance = 1.0;
-
-            //L = normalize(light) ;
-            E = normalize( -pos );
-            // E = -pos;
-            
-            // H = normalize( L + E );
+            E = -pos;
             
             vec4 NN = vec4(vNormal,0);
         
             // Transform vertex normal into eye coordinates
-               
             N = normalize( (modelViewMatrix*NN).xyz);
-        
-            // Compute terms in the illumination equation
-            // vec4 ambient = ambientProduct;
-        
-            // float Kd = max( dot(L, N), 0.0 );
-            // vec4  diffuse = Kd*diffuseProduct;
-        
-            // float Ks = pow( max(dot(N, H), 0.0), shininess );
-            // vec4  specular = Ks * specularProduct;
-            
-            // if( dot(L, N) < 0.0 ) {
-            // specular = vec4(0.0, 0.0, 0.0, 1.0);
-            // } 
-
-            //fColor = ambient + diffuse +specular;
-            // fColor.a = 1.0;
-
-            // -------------------------- end ------------------------------
 
             gl_Position = projectionMatrix * modelViewMatrix * vPosition;
-            
-
-           
-
+        
         }
         </script>
     <!-- fragment shader -->
@@ -84,7 +44,6 @@
         uniform vec4 specularProduct;
         uniform float shininess; 
         varying vec3 N,L,E;
-        varying float distance;
         #endif
         
         
@@ -100,10 +59,10 @@
             vec4 ambient = ambientProduct; 
             
             float Kd = max(dot(L, N), 0.0 );
-            vec4 diffuse = distance * Kd * diffuseProduct;
+            vec4 diffuse =  Kd * diffuseProduct;
 
             float Ks = pow(max(dot(N, H),0.0), shininess);
-            vec4 specular = distance * Ks * specularProduct;
+            vec4 specular =  Ks * specularProduct;
             
             if (dot(L, N)<0.0){
                 specular = vec4(0.0,0.0,0.0,1.0);
