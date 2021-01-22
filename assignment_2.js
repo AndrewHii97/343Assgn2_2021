@@ -82,16 +82,22 @@ var render = function () {
    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
    if (flag) theta[axis] += speed; //speed of the object
+   
+   
+   var viewMatrix = lookAt(eyeVector, atVector, upVector);
 
    projectionMatrix = ortho(left, right, bottom, ytop, near, far);
    gl.uniformMatrix4fv(projectionMatrixLoc, false, flatten(projectionMatrix));
 
    //create cube 
    modelView = mat4();
+   modelView = mult(modelView, viewMatrix);
    modelView = mult(modelView, translate(-2.8, 0, 0));
    modelView = mult(modelView, rotate(theta[xAxis], [1, 0, 0]));
    modelView = mult(modelView, rotate(theta[yAxis], [0, 1, 0]));
    modelView = mult(modelView, rotate(theta[zAxis], [0, 0, 1]));
+   
+
 
 
    gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelView));
@@ -100,9 +106,12 @@ var render = function () {
 
    //create sphere
    modelViewMatrix = mat4();
+   modelViewMatrix = mult(modelViewMatrix, viewMatrix);
    modelViewMatrix = mult(modelViewMatrix, rotate(theta[xAxis], [1, 0, 0]));
-   modelViewMatrix = mult(modelViewMatrix, rotate(theta[yAxis], [0, 1, 0]));
+   modelViewMatrix = mult(modelViewMatrix, rotate(theta[yAxis], [0, 1, 0]));modelView = mult(modelView, viewMatrix);
    modelViewMatrix = mult(modelViewMatrix, rotate(theta[zAxis], [0, 0, 1]));
+   
+
 
    gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
 
@@ -112,10 +121,13 @@ var render = function () {
 
    //create pyramid
    modelViewMatrix_1 = mat4();
+   modelViewMatrix_1 = mult(modelViewMatrix_1, viewMatrix);
    modelViewMatrix_1 = mult(modelViewMatrix_1, translate(2.8, 0, 0));
    modelViewMatrix_1 = mult(modelViewMatrix_1, rotate(theta[xAxis], [1, 0, 0]));
    modelViewMatrix_1 = mult(modelViewMatrix_1, rotate(theta[yAxis], [0, 1, 0]));
    modelViewMatrix_1 = mult(modelViewMatrix_1, rotate(theta[zAxis], [0, 0, 1]));
+   
+
 
 
    gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix_1));
@@ -131,7 +143,6 @@ var render = function () {
       flatten(specularProduct));
    gl.uniform4fv(gl.getUniformLocation(program, "lightPosition"),
       flatten(lightPosition));
-
    gl.uniform1f(gl.getUniformLocation(program, "shininess"), materialShininess);
 
    requestAnimFrame(render);
