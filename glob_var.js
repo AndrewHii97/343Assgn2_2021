@@ -23,12 +23,12 @@ var colorsArray = [];
 var texCoordsArray = [];
 
 var projectionMatrix;
-var modelViewMatrixLoc;
-var projectionMatrixLoc;
-
 var modelView; // cube
 var modelViewMatrix; //sphere
 var modelViewMatrix_1; //pyramid
+
+var modelViewMatrixLoc;
+var projectionMatrixLoc;
 
 // light property 
 var lightPosition = vec4();
@@ -54,16 +54,19 @@ var flag = true;
 var numTimesToSubdivide = 6;
 var index = 0;
 
-
-// camera position
+// ortho projection param
 var left = -4.0;
 var right = 4.0;
 var ytop = 3.0;
 var bottom = -3.0;
 var near = -20;
-var far = 30;
+var far = 30; 
 
-var viewerPos;
+
+// camera position 
+var eyeVector = vec3(0.0, 0.0, 0.0);
+var atVector = vec3(0.0, 0.0, -1.0);
+var upVector = vec3(0.0, 1.0, 0.0);
 
 // texture property
 var cubeTexture; //variable to store texture of cube

@@ -133,6 +133,30 @@ function config_ui() {
       lightPosition[0] = this.value;
    }
 
+   window.onkeydown = function(e){
+      var keyStroke = e.key;
+      const keyPress = {
+         Up:"ArrowUp",
+         Down:"ArrowDown",
+         Left:"ArrowLeft",
+         Right:"ArrowRight"
+      };
+      switch(keyStroke){
+         case keyPress.Up:
+            eyeVector = add(eyeVector, vec3( 0.0,  0.1,  0.0));
+            break;
+         case keyPress.Down:
+            eyeVector = subtract(eyeVector, vec3(  0.0,  0.1,  0.0));
+            break;
+         case keyPress.Left:
+            eyeVector = subtract(eyeVector, vec3( 0.1,  0.0,  0.0));
+            break;
+         case keyPress.Right:
+            eyeVector = add(eyeVector, vec3(  0.1,  0.0,  0.0));
+            break;
+      }
+   }
+
    // ------------------------------ Image for texture mapping ----------------------------
 	document.getElementById("Texture_1").onclick = function(){
 		textureImage = document.getElementById("Image_1");
