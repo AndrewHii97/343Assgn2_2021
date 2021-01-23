@@ -69,6 +69,27 @@ window.onload = function init() {
    gl.vertexAttribPointer(vPosition, 4, gl.FLOAT, false, 0, 0);
    gl.enableVertexAttribArray(vPosition);
 
+   var cBuffer = gl.createBuffer();
+   gl.bindBuffer( gl.ARRAY_BUFFER, cBuffer );
+   gl.bufferData( gl.ARRAY_BUFFER, flatten(colorsArray), gl.STATIC_DRAW );
+
+   var vColor = gl.getAttribLocation( program, "vColor" );
+   gl.vertexAttribPointer( vColor, 4, gl.FLOAT, false, 0, 0 );
+   gl.enableVertexAttribArray( vColor );
+   //console.log(vColor);
+
+   var tBuffer = gl.createBuffer();
+   gl.bindBuffer( gl.ARRAY_BUFFER, tBuffer );
+   gl.bufferData( gl.ARRAY_BUFFER, flatten(texCoordsArray), gl.STATIC_DRAW );
+
+   var vTexCoord = gl.getAttribLocation( program, "vTexCoord" );
+   gl.vertexAttribPointer( vTexCoord, 2, gl.FLOAT, false, 0, 0 );
+   gl.enableVertexAttribArray( vTexCoord );
+   
+   //Initialize the image for texture mapping
+   var textureImage = document.getElementById("Image_1");
+   configureTexture( textureImage );
+
    modelViewMatrixLoc = gl.getUniformLocation(program, "modelViewMatrix");
    projectionMatrixLoc = gl.getUniformLocation(program, "projectionMatrix");
 
@@ -82,23 +103,16 @@ var render = function () {
    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
    if (flag) theta[axis] += speed; //speed of the object
-   
-   
-   var viewMatrix = lookAt(eyeVector, atVector, upVector);
 
    projectionMatrix = ortho(left, right, bottom, ytop, near, far);
    gl.uniformMatrix4fv(projectionMatrixLoc, false, flatten(projectionMatrix));
 
    //create cube 
    modelView = mat4();
-   modelView = mult(modelView, viewMatrix);
    modelView = mult(modelView, translate(-2.8, 0, 0));
    modelView = mult(modelView, rotate(theta[xAxis], [1, 0, 0]));
    modelView = mult(modelView, rotate(theta[yAxis], [0, 1, 0]));
    modelView = mult(modelView, rotate(theta[zAxis], [0, 0, 1]));
-   
-
-
 
    gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelView));
 
@@ -106,12 +120,9 @@ var render = function () {
 
    //create sphere
    modelViewMatrix = mat4();
-   modelViewMatrix = mult(modelViewMatrix, viewMatrix);
    modelViewMatrix = mult(modelViewMatrix, rotate(theta[xAxis], [1, 0, 0]));
-   modelViewMatrix = mult(modelViewMatrix, rotate(theta[yAxis], [0, 1, 0]));modelView = mult(modelView, viewMatrix);
+   modelViewMatrix = mult(modelViewMatrix, rotate(theta[yAxis], [0, 1, 0]));
    modelViewMatrix = mult(modelViewMatrix, rotate(theta[zAxis], [0, 0, 1]));
-   
-
 
    gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
 
@@ -121,13 +132,10 @@ var render = function () {
 
    //create pyramid
    modelViewMatrix_1 = mat4();
-   modelViewMatrix_1 = mult(modelViewMatrix_1, viewMatrix);
    modelViewMatrix_1 = mult(modelViewMatrix_1, translate(2.8, 0, 0));
    modelViewMatrix_1 = mult(modelViewMatrix_1, rotate(theta[xAxis], [1, 0, 0]));
    modelViewMatrix_1 = mult(modelViewMatrix_1, rotate(theta[yAxis], [0, 1, 0]));
    modelViewMatrix_1 = mult(modelViewMatrix_1, rotate(theta[zAxis], [0, 0, 1]));
-   
-
 
 
    gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix_1));
@@ -143,6 +151,7 @@ var render = function () {
       flatten(specularProduct));
    gl.uniform4fv(gl.getUniformLocation(program, "lightPosition"),
       flatten(lightPosition));
+
    gl.uniform1f(gl.getUniformLocation(program, "shininess"), materialShininess);
 
    requestAnimFrame(render);

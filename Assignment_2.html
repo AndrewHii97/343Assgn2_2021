@@ -10,26 +10,22 @@
         attribute  vec3 vNormal;
         attribute  vec2 vTexCoord;
         attribute  vec4 vColor;
-        varying vec4 fColor;
+
+        // variables to be passed to fragment shader
+        varying  vec2 fTexCoord;
+        varying  vec4 fColor;
+
         varying vec3 N, L, E;
+        varying float distance;
         uniform vec4 ambientProduct, diffuseProduct, specularProduct;
         uniform mat4 modelViewMatrix;
         uniform mat4 projectionMatrix;
         uniform vec4 lightPosition;
         uniform float shininess;
-
-        // variables to be passed to fragment shader
-        varying  vec2 fTexCoord;
-        varying  vec4 fColor;
         uniform mediump int texMode;
 
         void main()
         {
-            // -------------------------- Texture --------------------------
-
-            fColor = vColor;
-            fTexCoord = vTexCoord;
-
             // -------------------------- lighting ----------------------------
 
             vec3 pos = -(modelViewMatrix * vPosition).xyz; 
@@ -42,8 +38,16 @@
             // Transform vertex normal into eye coordinates
             N = normalize( (modelViewMatrix*NN).xyz);
 
-            gl_Position = projectionMatrix * modelViewMatrix * vPosition;
+            // -------------------------- end ------------------------------
+
+            // -------------------------- Texture --------------------------
+
+            fColor = vColor;
+            fTexCoord = vTexCoord;
         
+            // -------------------------- end --------------------------------
+
+            gl_Position = projectionMatrix * modelViewMatrix * vPosition;
         }
         </script>
     <!-- fragment shader -->
@@ -88,7 +92,9 @@
             fColor.a = 1.0;
 
             // -------------------------- end ---------------------------------
+            
             gl_FragColor = fColor * texture2D( cubeTexture , fTexCoord );
+            
         }
         </script>
 
@@ -204,7 +210,6 @@
     <img id = "Image_4" src = "image4.jpg" hidden></img>
     <img id = "Image_5" src = "image5.jpg" hidden></img>
     <img id = "Image_6" src = "image6.jpg" hidden></img>
-
 </body>
 
 </html>

@@ -13,10 +13,17 @@ function quad1(a, b, c) {
     normalsArray.push(normal);
     normalsArray.push(normal);
     normalsArray.push(normal);
-    pointsArray.push(vertices[indices[0]]);
-    pointsArray.push(vertices[indices[1]]);
-    pointsArray.push(vertices[indices[2]]);
 
+    pointsArray.push(vertices[indices[0]]);
+    texCoordsArray.push(texCoord[0]);
+
+    pointsArray.push(vertices[indices[1]]);
+    texCoordsArray.push(texCoord[1]);
+    
+    pointsArray.push(vertices[indices[2]]);
+    texCoordsArray.push(texCoord[2]);
+
+    console.log(a);
 }
 
 function triangle(a, b, c) {
@@ -28,12 +35,15 @@ function triangle(a, b, c) {
     normalsArray.push(normal);
     normalsArray.push(normal);
 
-    // normalsArray.push(a);
-    // normalsArray.push(a);
-    // normalsArray.push(a);
     pointsArray.push(a);
+    texCoordsArray.push([sphereScale*Math.acos(a[0])/Math.PI, sphereScale*Math.asin(a[1]/Math.sqrt(1.0-a[0]*a[0]))/Math.PI]);
+
     pointsArray.push(b);
+    texCoordsArray.push([sphereScale*Math.acos(b[0])/Math.PI, sphereScale*Math.asin(b[1]/Math.sqrt(1.0-b[0]*b[0]))/Math.PI]);
+
+
     pointsArray.push(c);
+    texCoordsArray.push([sphereScale*Math.acos(c[0])/Math.PI, sphereScale*Math.asin(c[1]/Math.sqrt(1.0-c[0]*c[0]))/Math.PI]);
 
     index += 3;
 }
@@ -75,16 +85,27 @@ function quad(a, b, c, d) {
 
     pointsArray.push(vertices[a]);
     normalsArray.push(normal);
+    texCoordsArray.push(texCoord[0]);
+
     pointsArray.push(vertices[b]);
     normalsArray.push(normal);
+    texCoordsArray.push(texCoord[1]);
+
     pointsArray.push(vertices[c]);
     normalsArray.push(normal);
+    texCoordsArray.push(texCoord[2]);
+
     pointsArray.push(vertices[a]);
     normalsArray.push(normal);
+    texCoordsArray.push(texCoord[0]);
+
     pointsArray.push(vertices[c]);
     normalsArray.push(normal);
+    texCoordsArray.push(texCoord[2]);
+    
     pointsArray.push(vertices[d]);
     normalsArray.push(normal);
+    texCoordsArray.push(texCoord[3]);
 }
 
 
