@@ -1,7 +1,7 @@
 function colorPyramid() {
     quad1(12, 13, 14);
     quad1(12, 14, 15);
-    quad1(14, 12, 15);
+    quad1(14, 13, 15);
     quad1(15, 13, 12);
 }
 
