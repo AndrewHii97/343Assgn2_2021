@@ -8,16 +8,23 @@
     <script id="vertex-shader" type="x-shader/x-vertex">
         attribute  vec4 vPosition;
         attribute  vec3 vNormal;
-        varying vec4 fColor;
+        attribute  vec2 vTexCoord;
+        attribute  vec4 vColor;
+
+        // variables to be passed to fragment shader
+        varying  vec2 fTexCoord;
+        varying  vec4 fColor;
+
         varying vec3 N, L, E;
         uniform vec4 ambientProduct, diffuseProduct, specularProduct;
         uniform mat4 modelViewMatrix;
         uniform mat4 projectionMatrix;
         uniform vec4 lightPosition;
         uniform float shininess;
+        uniform mediump int texMode;
+
         void main()
         {
-        
             // -------------------------- lighting ----------------------------
 
             vec3 pos = -(modelViewMatrix * vPosition).xyz; 
@@ -30,8 +37,16 @@
             // Transform vertex normal into eye coordinates
             N = normalize( (modelViewMatrix*NN).xyz);
 
-            gl_Position = projectionMatrix * modelViewMatrix * vPosition;
+            // -------------------------- end ------------------------------
+
+            // -------------------------- Texture --------------------------
+
+            fColor = vColor;
+            fTexCoord = vTexCoord;
         
+            // -------------------------- end --------------------------------
+
+            gl_Position = projectionMatrix * modelViewMatrix * vPosition;
         }
         </script>
     <!-- fragment shader -->
@@ -48,6 +63,10 @@
         
         
         varying vec4 fColor;
+        varying vec2 fTexCoord;
+
+        uniform sampler2D cubeTexture, sphereTexture, pyramidTexture;
+        uniform int texMode;
         
         void
         main()
@@ -71,7 +90,9 @@
             fColor.a = 1.0;
 
             // -------------------------- end ---------------------------------
-            gl_FragColor = fColor;
+            
+            gl_FragColor = fColor * texture2D( cubeTexture , fTexCoord );
+            
         }
         </script>
 
@@ -181,6 +202,12 @@
 
     </div>
 
+    <img id = "Image_1" src = "image1.jpg" hidden></img>
+    <img id = "Image_2" src = "image2.jpg" hidden></img>
+    <img id = "Image_3" src = "image3.jpg" hidden></img>
+    <img id = "Image_4" src = "image4.jpg" hidden></img>
+    <img id = "Image_5" src = "image5.jpg" hidden></img>
+    <img id = "Image_6" src = "image6.jpg" hidden></img>
 </body>
 
 </html>

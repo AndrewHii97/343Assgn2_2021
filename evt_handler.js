@@ -41,6 +41,9 @@ function config_ui() {
       document.getElementById("Light_Loc").value = 0.0;
       document.getElementById("Position_1").value = 0.0;
 
+      textureImage = document.getElementById("Image_1");
+      configureTexture( textureImage );
+
       var light_src_param = init_source_light();
       lightAmbient = light_src_param.lightAmbient;
       lightDiffuse = light_src_param.lightDiffuse;
@@ -130,8 +133,6 @@ function config_ui() {
       lightPosition[0] = this.value;
    }
 
-   
-   // window.onkeydown = (e)=>{console.log(e.key)};
    window.onkeydown = function(e){
       var keyStroke = e.key;
       const keyPress = {
@@ -155,7 +156,37 @@ function config_ui() {
             break;
       }
    }
+
+   // ------------------------------ Image for texture mapping ----------------------------
+	document.getElementById("Texture_1").onclick = function(){
+		textureImage = document.getElementById("Image_1");
+      configureTexture( textureImage );
+   };
    
+   document.getElementById("Texture_2").onclick = function(){
+		textureImage = document.getElementById("Image_2");
+      configureTexture( textureImage );
+   };
 
+   document.getElementById("Texture_3").onclick = function(){
+		textureImage = document.getElementById("Image_3");
+      configureTexture( textureImage );
+   };
+   
+   document.getElementById("Texture_4").onclick = function(){
+		textureImage = document.getElementById("Image_4");
+      configureTexture( textureImage );
+   };
 
+   document.getElementById("Texture_5").onclick = function(){
+		textureImage = document.getElementById("Image_5");
+      configureTexture( textureImage );
+   };
+   
+   document.getElementById("Texture_6").onclick = function(){
+		textureImage = document.getElementById("Image_6");
+      configureTexture( textureImage );
+   };
+   
+   // ----------------------------------- end --------------------------------------------
 }

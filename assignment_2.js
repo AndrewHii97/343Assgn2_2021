@@ -69,6 +69,27 @@ window.onload = function init() {
    gl.vertexAttribPointer(vPosition, 4, gl.FLOAT, false, 0, 0);
    gl.enableVertexAttribArray(vPosition);
 
+   var cBuffer = gl.createBuffer();
+   gl.bindBuffer( gl.ARRAY_BUFFER, cBuffer );
+   gl.bufferData( gl.ARRAY_BUFFER, flatten(colorsArray), gl.STATIC_DRAW );
+
+   var vColor = gl.getAttribLocation( program, "vColor" );
+   gl.vertexAttribPointer( vColor, 4, gl.FLOAT, false, 0, 0 );
+   gl.enableVertexAttribArray( vColor );
+   //console.log(vColor);
+
+   var tBuffer = gl.createBuffer();
+   gl.bindBuffer( gl.ARRAY_BUFFER, tBuffer );
+   gl.bufferData( gl.ARRAY_BUFFER, flatten(texCoordsArray), gl.STATIC_DRAW );
+
+   var vTexCoord = gl.getAttribLocation( program, "vTexCoord" );
+   gl.vertexAttribPointer( vTexCoord, 2, gl.FLOAT, false, 0, 0 );
+   gl.enableVertexAttribArray( vTexCoord );
+   
+   //Initialize the image for texture mapping
+   var textureImage = document.getElementById("Image_1");
+   configureTexture( textureImage );
+
    modelViewMatrixLoc = gl.getUniformLocation(program, "modelViewMatrix");
    projectionMatrixLoc = gl.getUniformLocation(program, "projectionMatrix");
 
@@ -97,7 +118,6 @@ var render = function () {
    modelView = mult(modelView, rotate(theta[yAxis], [0, 1, 0]));
    modelView = mult(modelView, rotate(theta[zAxis], [0, 0, 1]));
    
-
 
 
    gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelView));

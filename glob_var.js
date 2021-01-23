@@ -19,6 +19,8 @@ var NumVertices_1 = 12; //pyramid
 
 var pointsArray = [];
 var normalsArray = [];
+var colorsArray = [];
+var texCoordsArray = [];
 
 var projectionMatrix;
 var modelView; // cube
@@ -66,6 +68,10 @@ var eyeVector = vec3(0.0, 0.0, 0.0);
 var atVector = vec3(0.0, 0.0, -1.0);
 var upVector = vec3(0.0, 1.0, 0.0);
 
+// texture property
+var cubeTexture; //variable to store texture of cube
+var sphereTexture; //variable to store texture of sphere
+var sphereScale = 3; // decide image bitmap scale
 
 
 var vertices = [
@@ -89,6 +95,24 @@ var vertices = [
    vec4(0.0, 0.50, 0.00),
    vec4(1.0, -0.50, 0.50),
    vec4(-1.0, -0.50, 0.50)
+];
+
+var texCoord = [
+   vec2(0, 0),
+   vec2(0, 1),
+   vec2(1, 1),
+   vec2(1, 0)
+];
+
+var vertexColors = [
+   vec4( 0.0, 0.0, 0.0, 1.0 ),  // black
+   vec4( 1.0, 0.0, 0.0, 1.0 ),  // red
+   vec4( 1.0, 1.0, 0.0, 1.0 ),  // yellow
+   vec4( 0.0, 1.0, 0.0, 1.0 ),  // green
+   vec4( 0.0, 0.0, 1.0, 1.0 ),  // blue
+   vec4( 1.0, 0.0, 1.0, 1.0 ),  // magenta
+   vec4( 0.0, 1.0, 1.0, 1.0 ),  // white
+   vec4( 0.0, 1.0, 1.0, 1.0 )   // cyan
 ];
 
 
@@ -150,3 +174,19 @@ function hexToRgb(hex) {
 function normalColor(byte_value) {
    return Math.round(((byte_value / 255 * 1.0) + Number.EPSILON) * 100) / 100;
 };
+
+ //Function for texture mapping for cube
+function configureTexture( image ) {
+
+   cubeTexture = gl.createTexture();
+   gl.activeTexture(gl.TEXTURE0 + 0);
+   gl.bindTexture( gl.TEXTURE_2D, cubeTexture );
+   gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+   
+  //upload image into texture;
+   gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image );
+   gl.generateMipmap( gl.TEXTURE_2D );
+   gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER,gl.NEAREST_MIPMAP_LINEAR );
+   gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST );
+   gl.uniform1i(gl.getUniformLocation(program, "cubeTexture"), 0);
+}
