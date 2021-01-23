@@ -8,6 +8,8 @@
     <script id="vertex-shader" type="x-shader/x-vertex">
         attribute  vec4 vPosition;
         attribute  vec3 vNormal;
+        attribute  vec2 vTexCoord;
+        attribute  vec4 vColor;
         varying vec4 fColor;
         varying vec3 N, L, E;
         uniform vec4 ambientProduct, diffuseProduct, specularProduct;
@@ -15,9 +17,19 @@
         uniform mat4 projectionMatrix;
         uniform vec4 lightPosition;
         uniform float shininess;
+
+        // variables to be passed to fragment shader
+        varying  vec2 fTexCoord;
+        varying  vec4 fColor;
+        uniform mediump int texMode;
+
         void main()
         {
-        
+            // -------------------------- Texture --------------------------
+
+            fColor = vColor;
+            fTexCoord = vTexCoord;
+
             // -------------------------- lighting ----------------------------
 
             vec3 pos = -(modelViewMatrix * vPosition).xyz; 
@@ -44,10 +56,15 @@
         uniform vec4 specularProduct;
         uniform float shininess; 
         varying vec3 N,L,E;
+        varying float distance;
         #endif
         
         
         varying vec4 fColor;
+        varying vec2 fTexCoord;
+
+        uniform sampler2D cubeTexture, sphereTexture, pyramidTexture;
+        uniform int texMode;
         
         void
         main()
@@ -71,7 +88,7 @@
             fColor.a = 1.0;
 
             // -------------------------- end ---------------------------------
-            gl_FragColor = fColor;
+            gl_FragColor = fColor * texture2D( cubeTexture , fTexCoord );
         }
         </script>
 
@@ -180,6 +197,13 @@
         </div>
 
     </div>
+
+    <img id = "Image_1" src = "image1.jpg" hidden></img>
+    <img id = "Image_2" src = "image2.jpg" hidden></img>
+    <img id = "Image_3" src = "image3.jpg" hidden></img>
+    <img id = "Image_4" src = "image4.jpg" hidden></img>
+    <img id = "Image_5" src = "image5.jpg" hidden></img>
+    <img id = "Image_6" src = "image6.jpg" hidden></img>
 
 </body>
 
