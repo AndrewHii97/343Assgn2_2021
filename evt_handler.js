@@ -1,9 +1,5 @@
 function config_ui() {
 
-   //add active class to indicate the initial option of the texture and rotation
-   //document.getElementById("Texture_1").classList.add("active");
-   //document.getElementById("x_axis").classList.add("active");
-
    // Set event handler for change axis of rotation 
    document.getElementById("y_axis").onclick = function () {
       clearRotateActiveClass();
@@ -217,6 +213,7 @@ function config_ui() {
    // ----------------------------------- end --------------------------------------------
 }
 
+// clear all the active class for texture
 function clearTextureActiveClass() {
    document.getElementById("Texture_1").classList.remove("active");
    document.getElementById("Texture_2").classList.remove("active");
@@ -226,6 +223,7 @@ function clearTextureActiveClass() {
    document.getElementById("Texture_6").classList.remove("active");
 } 
 
+// clear all the active class for rotation
 function clearRotateActiveClass() {
    document.getElementById("x_axis").classList.remove("active");
    document.getElementById("y_axis").classList.remove("active");
