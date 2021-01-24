@@ -1,14 +1,24 @@
 function config_ui() {
 
+   //add active class to indicate the initial option of the texture and rotation
+   //document.getElementById("Texture_1").classList.add("active");
+   //document.getElementById("x_axis").classList.add("active");
+
    // Set event handler for change axis of rotation 
    document.getElementById("y_axis").onclick = function () {
+      clearRotateActiveClass();
       axis = yAxis;
+      document.getElementById("y_axis").classList.add("active");
    };
    document.getElementById("z_axis").onclick = function () {
+      clearRotateActiveClass();
       axis = zAxis;
+      document.getElementById("z_axis").classList.add("active");
    };
    document.getElementById("x_axis").onclick = function () {
+      clearRotateActiveClass();
       axis = xAxis;
+      document.getElementById("x_axis").classList.add("active");
    };
    document.getElementById("toggle").onclick = function () {
       flag = !flag;
@@ -41,8 +51,13 @@ function config_ui() {
       document.getElementById("Light_Loc").value = 0.0;
       document.getElementById("Position_1").value = 0.0;
 
+      clearTextureActiveClass();
       textureImage = document.getElementById("Image_1");
       configureTexture( textureImage );
+      document.getElementById("Texture_1").classList.add("active");
+
+      clearRotateActiveClass()
+      document.getElementById("x_axis").classList.add("active");
 
       var light_src_param = init_source_light();
       lightAmbient = light_src_param.lightAmbient;
@@ -159,34 +174,60 @@ function config_ui() {
 
    // ------------------------------ Image for texture mapping ----------------------------
 	document.getElementById("Texture_1").onclick = function(){
+      clearTextureActiveClass();
 		textureImage = document.getElementById("Image_1");
       configureTexture( textureImage );
+      document.getElementById("Texture_1").classList.add("active");
    };
    
    document.getElementById("Texture_2").onclick = function(){
+      clearTextureActiveClass();
 		textureImage = document.getElementById("Image_2");
       configureTexture( textureImage );
+      document.getElementById("Texture_2").classList.add("active");
    };
 
    document.getElementById("Texture_3").onclick = function(){
+      clearTextureActiveClass();
 		textureImage = document.getElementById("Image_3");
       configureTexture( textureImage );
+      document.getElementById("Texture_3").classList.add("active");
    };
    
    document.getElementById("Texture_4").onclick = function(){
+      clearTextureActiveClass();
 		textureImage = document.getElementById("Image_4");
       configureTexture( textureImage );
+      document.getElementById("Texture_4").classList.add("active");
    };
 
    document.getElementById("Texture_5").onclick = function(){
+      clearTextureActiveClass();
 		textureImage = document.getElementById("Image_5");
       configureTexture( textureImage );
+      document.getElementById("Texture_5").classList.add("active");
    };
    
    document.getElementById("Texture_6").onclick = function(){
+      clearTextureActiveClass();
 		textureImage = document.getElementById("Image_6");
       configureTexture( textureImage );
+      document.getElementById("Texture_6").classList.add("active");
    };
-   
    // ----------------------------------- end --------------------------------------------
 }
+
+function clearTextureActiveClass() {
+   document.getElementById("Texture_1").classList.remove("active");
+   document.getElementById("Texture_2").classList.remove("active");
+   document.getElementById("Texture_3").classList.remove("active");
+   document.getElementById("Texture_4").classList.remove("active");
+   document.getElementById("Texture_5").classList.remove("active");
+   document.getElementById("Texture_6").classList.remove("active");
+} 
+
+function clearRotateActiveClass() {
+   document.getElementById("x_axis").classList.remove("active");
+   document.getElementById("y_axis").classList.remove("active");
+   document.getElementById("z_axis").classList.remove("active");
+} 
